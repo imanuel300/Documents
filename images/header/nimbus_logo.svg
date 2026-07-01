@@ -1,0 +1,5 @@
+<svg xmlns='http://www.w3.org/2000/svg' width='200' height='64' viewBox='0 0 200 64'>
+  <rect width='200' height='64' fill='#003B71' rx='8'/>
+  <text x='100' y='38' font-family='Arial' font-size='18' fill='white' text-anchor='middle' font-weight='bold'>נימבוס</text>
+  <text x='100' y='54' font-family='Arial' font-size='10' fill='#88bbee' text-anchor='middle'>NIMBUS GOV</text>
+</svg>

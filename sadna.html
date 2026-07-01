@@ -1,0 +1,1438 @@
+
+spec_to_design_workshop.html
+
+דף
+1
+/
+1
+100%
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>מדריך למשתתף - סדנת Spec-to-Design</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts - Rubik -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
+    
+    <style>
+        /* Unified Rubik Font across the entire manual */
+        * {
+            font-family: 'Rubik', sans-serif !important;
+        }
+        /* Custom scrollbar styling for a premium look */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+        .step-transition {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 antialiased min-h-screen flex flex-col">
+
+    <header class="bg-gradient-to-r from-blue-950 via-indigo-950 to-slate-900 text-white shadow-md sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+            <div class="flex items-center space-x-4 space-x-reverse">
+                <div class="bg-indigo-500/20 p-2.5 rounded-lg border border-indigo-400/30">
+                    <svg class="w-8 h-8 text-indigo-400 animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                    </svg>
+                </div>
+                <div>
+                    <div class="flex items-center space-x-2 space-x-reverse">
+                        <span class="bg-indigo-600 text-white text-[10px] px-2 py-0.5 rounded font-bold">AWS Kiro Lab</span>
+                        <span class="text-xs text-slate-400 font-bold">|</span>
+                        <span class="text-xs text-amber-400 font-bold">ממשלה בקליק</span>
+                    </div>
+                    <h1 class="text-lg sm:text-xl font-black tracking-tight mt-0.5">סדנת "Spec-to-Design" מעשית</h1>
+                </div>
+            </div>
+            
+            <!-- Overall Countdown Timer -->
+            <div class="flex items-center bg-slate-800/80 border border-slate-700 rounded-xl px-3 sm:px-4 py-2 space-x-4 space-x-reverse">
+                <div class="text-right hidden sm:block">
+                    <p class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">זמן כולל לסדנה</p>
+                    <p class="text-xs font-bold text-slate-200">120 דקות תרגיל</p>
+                </div>
+                <div class="flex items-center space-x-1.5 space-x-reverse bg-indigo-950/80 px-2.5 py-1.5 rounded-lg border border-indigo-500/30">
+                    <span id="global-timer" class="font-mono text-lg font-bold text-amber-400">120:00</span>
+                    <button id="toggle-timer-btn" class="text-slate-400 hover:text-white transition" onclick="toggleGlobalTimer()">
+                        <!-- Play Icon -->
+                        <svg id="play-icon" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path></svg>
+                        <!-- Pause Icon (Hidden by default) -->
+                        <svg id="pause-icon" class="w-4 h-4 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 9v6m4-6v6m7-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="bg-indigo-50 border-b border-indigo-100 py-6 px-4 sm:px-6 lg:px-8">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row md:items-center md:justify-between gap-6">
+            <div class="flex-1 space-y-2">
+                <div class="flex flex-wrap items-center gap-2">
+                    <span class="bg-indigo-100 text-indigo-800 text-xs font-bold px-2.5 py-1 rounded-full">חזון המוצר</span>
+                    <span class="text-xs text-slate-500 font-bold">פורטל פניות הציבור האחוד</span>
+                    <span class="bg-amber-100 text-amber-800 text-xs font-bold px-2.5 py-1 rounded-full">סביבת AWS Kiro</span>
+                </div>
+                <p class="text-slate-700 text-sm sm:text-base leading-relaxed font-normal">
+                    יצירת נקודת מגע דיגיטלית אחודה, נגישה ומבוססת בינה מלאכותית, המאפשרת לאזרח להגיש פנייה לממשלה בשפה חופשית מבלי שעליו לדעת מראש איזה משרד ממשלתי אמון על הטיפול בה.
+                </p>
+                <div class="pt-1 flex items-center gap-2 text-xs text-indigo-950 font-bold">
+                    <svg class="w-4 h-4 text-indigo-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
+                    <span>מדריך זה מותאם ומלווה את הקובץ: <span class="underline text-indigo-700 font-black">"תרגיל לסדנא הוראת עבודה_3.docx"</span></span>
+                </div>
+            </div>
+            <!-- Progress Tracker -->
+            <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm w-full md:w-80 shrink-0">
+                <div class="flex justify-between items-center mb-2">
+                    <span class="text-xs font-bold text-slate-500">התקדמות המשימות שלך:</span>
+                    <span id="progress-text" class="text-sm font-bold text-indigo-600">0%</span>
+                </div>
+                <div class="w-full bg-slate-100 h-2.5 rounded-full overflow-hidden">
+                    <div id="progress-bar" class="bg-gradient-to-r from-indigo-50 to-indigo-700 h-full w-0 transition-all duration-500 rounded-full"></div>
+                </div>
+                <p class="text-[11px] text-slate-400 mt-2 text-center font-bold">סמנו משימות שביצעתם בגוף המדריך כדי להתקדם</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-1 w-full font-sans">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+            
+            <!-- Right Sidebar Pane (Steps Navigation) -->
+            <aside class="lg:col-span-4 space-y-4">
+                <div class="bg-white rounded-xl border border-slate-200 p-4 shadow-sm sticky top-24 font-bold">
+                    <h2 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3">שלבי העבודה בתרגיל</h2>
+                    
+                    <nav class="space-y-1.5" id="sidebar-nav-container">
+                        <!-- Step 1 Connection -->
+                        <button onclick="scrollToStep('step-conn')" id="nav-step-conn" class="nav-btn w-full flex items-center justify-between p-3 rounded-xl border text-right transition-all bg-amber-50 border-amber-200 text-amber-900 font-bold shadow-sm">
+                            <div class="flex items-center space-x-3 space-x-reverse">
+                                <span class="w-6.5 h-6.5 rounded-full bg-amber-600 text-white flex items-center justify-center font-bold text-[11px]">1</span>
+                                <div class="pr-2">
+                                    <p class="text-[10px] text-amber-600 font-bold">שלב 1</p>
+                                    <p class="text-xs font-bold">התחברות ל-AWS Kiro</p>
+                                </div>
+                            </div>
+                            <span class="text-[9px] bg-amber-100 text-amber-800 font-bold px-2 py-0.5 rounded-full">AWS</span>
+                        </button>
+
+                        <!-- Step 2 Configs -->
+                        <button onclick="scrollToStep('step-sdd-base')" id="nav-step-sdd-base" class="nav-btn w-full flex items-center justify-between p-3 rounded-xl border text-right transition-all bg-white border-slate-200 text-slate-600 hover:bg-slate-50">
+                            <div class="flex items-center space-x-3 space-x-reverse">
+                                <span class="w-6.5 h-6.5 rounded-full bg-slate-200 text-slate-700 flex items-center justify-center font-bold text-[11px]">2</span>
+                                <div class="pr-2">
+                                    <p class="text-[10px] text-slate-400 font-bold">שלב 2 | יסודות</p>
+                                    <p class="text-xs font-bold">הגדרות בסיס ו-SDD</p>
+                                </div>
+                            </div>
+                            <span class="text-[9px] bg-teal-100 text-teal-700 font-bold px-2 py-0.5 rounded-full">SDD</span>
+                        </button>
+
+                        <!-- Step 3 Prep -->
+                        <button onclick="scrollToStep('step-prep')" id="nav-step-prep" class="nav-btn w-full flex items-center justify-between p-3 rounded-xl border text-right transition-all bg-white border-slate-200 text-slate-600 hover:bg-slate-50">
+                            <div class="flex items-center space-x-3 space-x-reverse">
+                                <span class="w-6.5 h-6.5 rounded-full bg-slate-200 text-slate-700 flex items-center justify-center font-bold text-[11px]">3</span>
+                                <div class="pr-2">
+                                    <p class="text-[10px] text-slate-400 font-bold">שלב 3 | סביבה</p>
+                                    <p class="text-xs font-bold">הכנת סביבת העבודה</p>
+                                </div>
+                            </div>
+                            <span class="text-[9px] bg-slate-100 text-slate-700 font-bold px-2 py-0.5 rounded-full">Drive</span>
+                        </button>
+
+                        <!-- Step 4 Highlights -->
+                        <button onclick="scrollToStep('step-highlights')" id="nav-step-highlights" class="nav-btn w-full flex items-center justify-between p-3 rounded-xl border text-right transition-all bg-white border-slate-200 text-slate-600 hover:bg-slate-50">
+                            <div class="flex items-center space-x-3 space-x-reverse">
+                                <span class="w-6.5 h-6.5 rounded-full bg-slate-200 text-slate-700 flex items-center justify-center font-bold text-[11px]">4</span>
+                                <div class="pr-2">
+                                    <p class="text-[10px] text-slate-400 font-bold">שלב 4 | דגשים</p>
+                                    <p class="text-xs font-bold">דגשים לפני שמתחילים</p>
+                                </div>
+                            </div>
+                            <span class="text-[9px] bg-rose-100 text-rose-800 font-bold px-2 py-0.5 rounded-full">טיפים</span>
+                        </button>
+
+                        <!-- Step 5 Prompt -->
+                        <button onclick="scrollToStep('step-prompt')" id="nav-step-prompt" class="nav-btn w-full flex items-center justify-between p-3 rounded-xl border text-right transition-all bg-white border-slate-200 text-slate-600 hover:bg-slate-50">
+                            <div class="flex items-center space-x-3 space-x-reverse">
+                                <span class="w-6.5 h-6.5 rounded-full bg-slate-200 text-slate-700 flex items-center justify-center font-bold text-[11px]">5</span>
+                                <div class="pr-2">
+                                    <p class="text-[10px] text-slate-400 font-bold">שלב 5 | פתיחה</p>
+                                    <p class="text-xs font-bold">פרומפט אב הטיפוס</p>
+                                </div>
+                            </div>
+                            <span class="text-[9px] bg-indigo-100 text-indigo-700 font-bold px-2 py-0.5 rounded-full">Copy</span>
+                        </button>
+
+                        <!-- Step 6: Requirements -->
+                        <button onclick="scrollToStep('step-req')" id="nav-step-req" class="nav-btn w-full flex items-center justify-between p-3 rounded-xl border text-right transition-all bg-white border-slate-200 text-slate-600 hover:bg-slate-50">
+                            <div class="flex items-center space-x-3 space-x-reverse">
+                                <span class="w-6.5 h-6.5 rounded-full bg-slate-200 text-slate-700 flex items-center justify-center font-bold text-[11px]">6</span>
+                                <div class="pr-2">
+                                    <p class="text-[10px] text-slate-400 font-bold">שלב 6 | תרגול 1</p>
+                                    <p class="text-xs font-bold font-bold">דרישות (Requirements)</p>
+                                </div>
+                            </div>
+                            <span class="text-[10px] bg-blue-100 text-blue-700 font-bold px-2 py-0.5 rounded-full">EARS</span>
+                        </button>
+
+                        <!-- Step 7: Design -->
+                        <button onclick="scrollToStep('step-design')" id="nav-step-design" class="nav-btn w-full flex items-center justify-between p-3 rounded-xl border text-right transition-all bg-white border-slate-200 text-slate-600 hover:bg-slate-50">
+                            <div class="flex items-center space-x-3 space-x-reverse">
+                                <span class="w-6.5 h-6.5 rounded-full bg-slate-200 text-slate-700 flex items-center justify-center font-bold text-[11px]">7</span>
+                                <div class="pr-2">
+                                    <p class="text-[10px] text-slate-400 font-bold">שלב 7 | תרגול 2</p>
+                                    <p class="text-xs font-bold">תכנון ארכיטקטוני (Design)</p>
+                                </div>
+                            </div>
+                            <span class="text-[10px] bg-orange-100 text-orange-700 font-bold px-2 py-0.5 rounded-full">Schema</span>
+                        </button>
+
+                        <!-- Step 8: Implementation -->
+                        <button onclick="scrollToStep('step-impl')" id="nav-step-impl" class="nav-btn w-full flex items-center justify-between p-3 rounded-xl border text-right transition-all bg-white border-slate-200 text-slate-600 hover:bg-slate-50">
+                            <div class="flex items-center space-x-3 space-x-reverse">
+                                <span class="w-6.5 h-6.5 rounded-full bg-slate-200 text-slate-700 flex items-center justify-center font-bold text-[11px]">8</span>
+                                <div class="pr-2">
+                                    <p class="text-[10px] text-slate-400 font-bold">שלב 8 | תרגול 3</p>
+                                    <p class="text-xs font-bold font-bold">יישום המערכת (Tasks)</p>
+                                </div>
+                            </div>
+                            <span class="text-[10px] bg-purple-100 text-purple-700 font-bold px-2 py-0.5 rounded-full">Tasks</span>
+                        </button>
+
+                        <!-- Step 9: Run Product -->
+                        <button onclick="scrollToStep('step-run')" id="nav-step-run" class="nav-btn w-full flex items-center justify-between p-3 rounded-xl border text-right transition-all bg-white border-slate-200 text-slate-600 hover:bg-slate-50">
+                            <div class="flex items-center space-x-3 space-x-reverse">
+                                <span class="w-6.5 h-6.5 rounded-full bg-slate-200 text-slate-700 flex items-center justify-center font-bold text-[11px]">9</span>
+                                <div class="pr-2">
+                                    <p class="text-[10px] text-slate-400 font-bold">שלב 9 | הרצה</p>
+                                    <p class="text-xs font-bold font-bold">הרצת המוצר (Run)</p>
+                                </div>
+                            </div>
+                            <span class="text-[10px] bg-emerald-100 text-emerald-700 font-bold px-2 py-0.5 rounded-full">Local</span>
+                        </button>
+
+                        <!-- Step 10: Agent Querying -->
+                        <button onclick="scrollToStep('step-query')" id="nav-step-query" class="nav-btn w-full flex items-center justify-between p-3 rounded-xl border text-right transition-all bg-white border-slate-200 text-slate-600 hover:bg-slate-50">
+                            <div class="flex items-center space-x-3 space-x-reverse">
+                                <span class="w-6.5 h-6.5 rounded-full bg-slate-200 text-slate-700 flex items-center justify-center font-bold text-[11px]">10</span>
+                                <div class="pr-2">
+                                    <p class="text-[10px] text-slate-400 font-bold">שלב 10 | תשאול</p>
+                                    <p class="text-xs font-bold">תשאול הסוכן (Q&A)</p>
+                                </div>
+                            </div>
+                            <span class="text-[9px] bg-teal-100 text-teal-700 font-bold px-2 py-0.5 rounded-full">Query</span>
+                        </button>
+                    </nav>
+                </div>
+            </aside>
+
+            <!-- Left Main Content Pane with Pastel Colored Sections -->
+            <main class="lg:col-span-8 space-y-12">
+                
+                <!-- STEP 1: Connection (Pastel Amber/Yellow Theme) -->
+                <section id="step-conn" class="step-section bg-amber-50/40 rounded-2xl border border-amber-200/80 shadow-sm p-6 sm:p-8 transition-all duration-300">
+                    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between border-b border-amber-200/50 pb-4 mb-6">
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-xl bg-amber-200 text-amber-900 flex items-center justify-center font-bold text-lg">1</div>
+                            <div>
+                                <h2 class="text-xl font-bold text-amber-950 font-sans">שלב 1: התחברות לסביבת AWS Kiro</h2>
+                                <p class="text-xs text-amber-700 font-bold">גישה למסמך הדרכת החיבור הרשמי וביצוע לוגין</p>
+                            </div>
+                        </div>
+                        <div class="mt-3 sm:mt-0">
+                            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-amber-200/60 text-amber-900">
+                                <span class="w-2 h-2 rounded-full bg-amber-500"></span>
+                                סביבת מעבדה
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="prose prose-slate max-w-none text-slate-700 space-y-5">
+                        <p class="text-sm leading-relaxed font-normal">
+                            על מנת להתחיל את העבודה, יש להתחבר תחילה לסביבת המעבדה המוקצית עבורכם ב-AWS. עקבו אחר ההנחיה הבאה:
+                        </p>
+
+                        <!-- Redirection Box -->
+                        <div class="bg-white/80 border border-amber-200 rounded-xl p-5 space-y-3 font-normal">
+                            <div class="flex items-start gap-3">
+                                <div class="bg-amber-100 text-amber-800 p-2.5 rounded-lg shrink-0">
+                                    <svg class="w-6 h-6 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+                                </div>
+                                <div class="flex-1">
+                                    <h3 class="text-sm font-extrabold text-slate-900 uppercase font-sans">הנחיית גישה והתחברות למעבדה</h3>
+                                    <p class="text-xs text-slate-700 leading-relaxed mt-1 font-normal font-sans">
+                                        אנא היעזרו ב**מדריך ובהוראות ההדרכה של AWS** שסופקו לכם כדי להתחבר בצורה תקינה ומלאה לסביבת המעבדה של AWS. המדריך כולל את כל שלבי ה-SSO, הגדרות ה-DCV ומסכי העבודה.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Heavy Warning Accent Box - Word "דגש" colored RED -->
+                        <div class="bg-red-50 border-r-4 border-red-500 rounded-l-xl p-5 space-y-2.5 shadow-xs">
+                            <div class="flex items-center gap-2 text-red-950 font-bold text-xs sm:text-sm">
+                                <svg class="w-5 h-5 text-red-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+                                <h4><span class="text-red-600 font-bold">דגש</span> קריטי - נא לשים לב!</h4>
+                            </div>
+                            <p class="text-xs text-red-800 leading-relaxed font-bold font-sans">
+                                יש להשלים אך ורק את שלבי ההתחברות הראשונית (Login) לסביבת המעבדה ולוודא שהחיבור נקלט בהצלחה. 
+                                בשום פנים ואופן אין להתקדם במטלות או במדריכים של המעבדה בתוך AWS עצמה! כלל שלבי התרגול המעשיים הבאים יבוצעו באופן מלא ומסודר כאן במדריך זה ובסביבת ה-Kiro המקומית שלכם.
+                            </p>
+                        </div>
+
+                        <!-- Checkable tasks for Step 1 -->
+                        <div class="mt-6 pt-4 border-t border-amber-200/50">
+                            <h4 class="text-xs font-bold text-slate-400 uppercase mb-3 tracking-wider">משימות לביצוע:</h4>
+                            <div class="space-y-2">
+                                <label class="flex items-center gap-3 p-3 rounded-lg border border-amber-200 bg-white/70 hover:bg-white transition cursor-pointer">
+                                    <input type="checkbox" class="task-checkbox rounded border-amber-300 text-amber-600 focus:ring-amber-500 w-4 h-4" onchange="updateProgress()" value="conn-1">
+                                    <span class="text-xs text-slate-700 font-bold">פעלתי לפי הוראות ההדרכה של AWS והתחברתי בהצלחה למעבדה</span>
+                                </label>
+                                <label class="flex items-center gap-3 p-3 rounded-lg border border-amber-200 bg-white/70 hover:bg-white transition cursor-pointer">
+                                    <input type="checkbox" class="task-checkbox rounded border-amber-300 text-amber-600 focus:ring-amber-500 w-4 h-4" onchange="updateProgress()" value="conn-2">
+                                    <span class="text-xs text-slate-700 font-bold">עצרתי בשלב החיבור (ללא התקדמות במשימות AWS) ואני מוכן להמשך התרגיל כאן</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- STEP 2: Base Configs and Basic Concepts (Pastel Teal Theme with Emphasized SPEC Box) -->
+                <section id="step-sdd-base" class="step-section bg-teal-50/40 rounded-2xl border border-teal-200/80 shadow-sm p-6 sm:p-8 transition-all duration-300">
+                    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between border-b border-teal-200/50 pb-4 mb-6">
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-xl bg-teal-200 text-teal-900 flex items-center justify-center font-bold text-lg">2</div>
+                            <div>
+                                <h2 class="text-xl font-bold text-teal-950">שלב 2: הגדרות בסיס ומושגי יסוד (SDD וחוקה)</h2>
+                                <p class="text-xs text-teal-700 font-bold">הבנת תהליכי הפיתוח והתאמתם לפעילות סוכני ה-AI במעבדה</p>
+                            </div>
+                        </div>
+                        <div class="mt-3 sm:mt-0">
+                            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-teal-200/60 text-teal-900">
+                                <span class="w-2 h-2 rounded-full bg-teal-500"></span>
+                                מתודולוגיית SDD
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="space-y-5 text-sm text-slate-700 leading-relaxed font-normal">
+                        <!-- Principle 1: Spec as Code -->
+                        <div class="bg-white/80 p-4 rounded-xl border border-teal-200/60 space-y-2">
+                            <h3 class="text-sm font-bold text-teal-950 flex items-center gap-2">
+                                <span>📄</span> 1. מפרט כקוד (Spec as Code) וצמצום פער התיווך
+                            </h3>
+                            <p class="text-xs leading-relaxed text-slate-700 font-normal">
+                                <strong>מפרט כקוד (Spec as Code)</strong> הינו תהליך הפיתוח המתחיל ביצירת מפרט פורמלי ומדויק שעובר תיקוף על ידי AI. רק לאחר אישורו, סוכני ה-AI מתרגמים אותו לקוד באופן אוטונומי. 
+                            </p>
+                            <p class="text-xs leading-relaxed text-slate-700 font-normal font-sans">
+                                <strong>צמצום פער התיווך:</strong> ה-SDD מבטל את חוסר ההבנה בין דרישות המערכת לביצוע הטכני. אם הקוד אינו תואם ב-100% למפרט, הוא נדחה אוטומטית בשלב הבדיקות.
+                            </p>
+                        </div>
+
+                        <!-- Principle 2: Constitution -->
+                        <div class="bg-white/80 p-4 rounded-xl border border-teal-200/60 space-y-2">
+                            <h3 class="text-sm font-bold text-teal-950 flex items-center gap-2">
+                                <span>📜</span> 2. חוקת הפרויקט (Constitution) ומתודולוגיית SDD
+                            </h3>
+                            <p class="text-xs leading-relaxed text-slate-700 font-normal">
+                                <strong>החוקה</strong> היא קבוצת עקרונות, כללים ואילוצים מחייבים המהווים את ה-DNA הארכיטקטוני של המערכת ושל פעילות סוכני ה-AI.
+                            </p>
+                            <p class="text-xs leading-relaxed text-slate-700 font-normal">
+                                החוקה אינה מסמך תיעוד פסיבי, אלא שכבת דרישות אקטיבית שכל תוצר AI — מפרט, קוד, בדיקות, קונפיגורציה — מחויב לעמוד בה לאורך כל מחזור חיי המערכת. שיטת הפיתוח המשלבת חוקה ומפרט נקראת <strong>SDD — Spec-Driven Development (פיתוח מונחה מפרט)</strong>.
+                            </p>
+                        </div>
+
+                        <!-- Connecting to Lab / Why SPEC Mode (UPDATED WITH HEAVILY EMPHASIZED SPEC BORDER) -->
+                        <div class="bg-gradient-to-r from-teal-50 to-emerald-50 p-4.5 rounded-xl border border-teal-200/80 space-y-2.5">
+                            <h3 class="text-sm font-bold text-teal-950 flex items-center gap-1.5">
+                                <span>💡</span> חיבור העקרונות למעבדה - בחירה בתצורת SPEC
+                            </h3>
+                            <p class="text-xs leading-relaxed text-slate-700">
+                                בפלטפורמת <strong>Kiro</strong> קיימות שתי תצורות עבודה עיקריות: <strong>SPEC</strong> ו-<strong>VIBE</strong>. במעבדה זו אנו בוחרים באופן קשיח לעבוד בתצורת <strong>SPEC</strong>.
+                            </p>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-2">
+                                <div class="bg-white/60 p-3 rounded-lg border border-teal-100 opacity-80">
+                                    <p class="text-xs font-bold text-slate-400 mb-1">תצורת VIBE (קוד חופשי):</p>
+                                    <p class="text-[11px] text-slate-400 leading-relaxed font-normal">מתמקדת בפיתוח קוד חופשי ואינטואיטיבי (כמו כתיבה ידנית ישירה ושיחה שוטפת מול ה-AI), ללא שלבי אפיון ותיקוף קשיחים.</p>
+                                </div>
+                                <div class="bg-teal-100 border-2 border-teal-600 p-3.5 rounded-lg shadow-md ring-4 ring-teal-500/20 transform scale-[1.01] transition-transform">
+                                    <p class="text-xs font-black text-teal-950 mb-1 flex items-center gap-1">
+                                        <span>🎯</span> תצורת SPEC (תהליך מבוסס מפרט וחוקה):
+                                    </p>
+                                    <p class="text-[11px] text-teal-900 leading-relaxed font-bold">המעבדה הזאת מתמקדת בתהליך עבודה של spec ביחד עם חוקה. הסוכן מחויב לאשר קודם את המפרטים ורק אז לגזור קוד התואם לחוקת הפרויקט.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Checkable tasks for Step 2 -->
+                        <div class="pt-4 border-t border-teal-200/50 font-sans">
+                            <h4 class="text-xs font-bold text-teal-850 uppercase mb-3 tracking-wider font-sans">משימות לביצוע:</h4>
+                            <div class="space-y-2 font-normal">
+                                <label class="flex items-center gap-3 p-3 rounded-lg border border-teal-200 bg-white/70 hover:bg-white transition cursor-pointer">
+                                    <input type="checkbox" class="task-checkbox rounded border-teal-300 text-teal-600 focus:ring-teal-500 w-4 h-4" onchange="updateProgress()" value="sdd-1">
+                                    <span class="text-xs text-slate-700 font-bold">הבנתי את עקרונות ה-Spec as Code, תפקיד החוקה וההבדל בין SPEC ל-VIBE</span>
+                                </label>
+                                <label class="flex items-center gap-3 p-3 rounded-lg border border-teal-100 bg-white/70 hover:bg-white transition cursor-pointer font-sans">
+                                    <input type="checkbox" class="task-checkbox rounded border-teal-300 text-indigo-600 focus:ring-indigo-500 w-4 h-4 font-sans" onchange="updateProgress()" value="sdd-2">
+                                    <span class="text-xs text-slate-700 font-bold">אישרתי כי המעבדה מתמקדת באופן מלא בתהליך העבודה של SPEC משולב חוקה</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- STEP 3: Prep (Pastel Indigo/Lavender Theme) -->
+                <section id="step-prep" class="step-section bg-indigo-50/40 rounded-2xl border border-indigo-200/80 shadow-sm p-6 sm:p-8 transition-all duration-300">
+                    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between border-b border-indigo-200/50 pb-4 mb-6">
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-xl bg-indigo-200 text-indigo-900 flex items-center justify-center font-bold text-lg font-sans">3</div>
+                            <div>
+                                <h2 class="text-xl font-extrabold text-slate-900 font-sans">שלב 3: הכנת סביבת העבודה והחוקות</h2>
+                                <p class="text-xs text-indigo-600 font-medium font-sans">ייבוא החוקה הממשלתית ופתיחת פרויקט הבסיס ב-Kiro</p>
+                            </div>
+                        </div>
+                        <div class="mt-3 sm:mt-0">
+                            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-indigo-200/60 text-indigo-900 animate-pulse">
+                                <span class="w-2 h-2 rounded-full bg-indigo-500"></span>
+                                הכנת פרויקט
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="prose prose-slate max-w-none text-slate-600 space-y-6">
+                        <p class="text-sm leading-relaxed text-slate-700 font-normal font-sans">
+                            לאחר ההתחברות המוצלחת והכניסה לסביבת ה-Kiro, נבצע את הכנת סביבת העבודה המשותפת בשלושה שלבים ברורים ואינטראקטיביים.
+                        </p>
+
+                        <!-- Google Drive Link Banner -->
+                        <div class="bg-gradient-to-r from-blue-500 via-indigo-600 to-indigo-700 text-white rounded-2xl p-5 shadow-md flex flex-col md:flex-row items-center justify-between gap-5 transition-all duration-300 hover:shadow-lg font-sans">
+                            <div class="flex items-center gap-4">
+                                <div class="bg-white/20 p-3 rounded-xl shrink-0">
+                                    <svg class="w-8 h-8 text-white animate-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                                </div>
+                                <div class="text-right">
+                                    <h3 class="text-sm font-bold uppercase tracking-wide">הורדת קבצי הפרויקט המקוריים</h3>
+                                    <p class="text-xs text-indigo-100 mt-1 leading-relaxed font-sans">
+                                        לחצו להורדה מלאה של קבצי ה-Markdown וחוקות הבסיס הרשמיות של הפרויקט:
+                                    </p>
+                                </div>
+                            </div>
+                            <a href="https://drive.google.com/file/d/1uqiRheArGnOwchemEr8e0Hcwn1eKwDSz/view?usp=sharing" target="_blank" class="w-full md:w-auto text-center px-6 py-3 bg-white text-indigo-950 font-bold rounded-xl shadow-md text-xs hover:bg-slate-100 transition-all duration-150 transform hover:-translate-y-0.5 select-none shrink-0 font-sans">
+                                מעבר ל-Google Drive ↗
+                            </a>
+                        </div>
+
+                        <!-- Stepper Visual Layout -->
+                        <div class="relative border-r-2 border-indigo-100 mr-3.5 space-y-8 pb-1 font-sans">
+                            
+                            <!-- Step A -->
+                            <div class="relative pr-8">
+                                <span class="absolute -right-3.5 top-0 bg-indigo-600 text-white w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold ring-4 ring-white">א</span>
+                                <div class="space-y-1.5">
+                                    <h3 class="text-sm font-bold text-slate-900 flex items-center gap-1.5 font-sans font-sans">
+                                        <span>💾</span> שלב א: העתקת קבצי תבנית הפרויקט לסביבת המעבדה
+                                    </h3>
+                                    <p class="text-xs text-slate-600 leading-relaxed max-w-2xl font-normal font-sans font-sans">
+                                        היכנסו לקישור הגוגל דרייב שלמעלה, משכו והורידו את תיקיית הקבצים המלאה, ולאחר מכן יש להעתיק את קובץ ה-zip לספריית ה-Desktop של המעבדה ו<strong>יש לחלץ ב-desktop את קובץ ה-zip</strong>.
+                                    </p>
+                                </div>
+                            </div>
+
+                            <!-- Step B -->
+                            <div class="relative pr-8">
+                                <span class="absolute -right-3.5 top-0 bg-indigo-600 text-white w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold ring-4 ring-white font-sans font-sans">ב</span>
+                                <div class="space-y-2">
+                                    <h3 class="text-sm font-bold text-slate-900 flex items-center gap-1.5 font-sans font-sans">
+                                        <span>🖥️</span> שלב ב: פתיחת הפרויקט בתוך ממשק Kiro
+                                    </h3>
+                                    <p class="text-xs text-slate-700 leading-relaxed max-w-2xl font-normal font-sans font-sans font-sans">
+                                        פתחו את ממשק ה-Kiro המקומי והגדירו את הפרויקט המעשי שלכם על פי השלבים הבאים:
+                                    </p>
+                                    
+                                    <div class="bg-white/80 border border-indigo-200 rounded-xl p-4 max-w-xl space-y-2 font-sans font-normal">
+                                        <div class="flex items-center gap-2.5 text-xs text-slate-700">
+                                            <span class="w-1.5 h-1.5 rounded-full bg-indigo-500 shrink-0 font-sans"></span>
+                                            <span>לחצו על כפתור פתיחת פרויקט חדש (New Project).</span>
+                                        </div>
+                                        <div class="flex items-center gap-2.5 text-xs text-slate-700">
+                                            <span class="w-1.5 h-1.5 rounded-full bg-indigo-500 shrink-0 font-sans"></span>
+                                            <span>בחרו את ספריית הפרויקט שהעתקתם לשולחן העבודה (<code class="font-mono bg-slate-100 text-indigo-950 px-1 rounded font-bold text-xs">kiro-starting-project-main</code>).</span>
+                                        </div>
+                                        <div class="flex items-center gap-2.5 text-xs text-slate-700 font-sans font-sans font-sans">
+                                            <span class="w-1.5 h-1.5 rounded-full bg-indigo-500 shrink-0"></span>
+                                            <span>אשרו את הפתיחה בלחיצה על כפתור ה-<strong>Open</strong> המובנה.</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Step C -->
+                            <div class="relative pr-8 font-sans">
+                                <span class="absolute -right-3.5 top-0 bg-indigo-600 text-white w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold ring-4 ring-white font-sans font-sans">ג</span>
+                                <div class="space-y-3.5 font-sans font-sans">
+                                    <div class="space-y-1">
+                                        <h3 class="text-sm font-bold text-slate-900 flex items-center gap-1.5 font-sans font-sans">
+                                            <span>📂</span> שלב ג: אימות ואישור קיומן של חוקות היעד בספריית steering
+                                        </h3>
+                                        <p class="text-xs text-slate-600 leading-relaxed max-w-2xl font-normal font-sans font-sans">
+                                            לפני שמתחילים לכתוב את ה-Spec, חובה לוודא שקבצי חוקות הניהול הממשלתי קיימים בתוך ספריית הפרויקט ומוכנים לשימוש הסוכן:
+                                        </p>
+                                    </div>
+
+                                    <!-- actual screenshot showing the workspace tree structure -->
+                                    <div class="my-4 max-w-xl font-sans">
+                                        <img src="Screenshot 2026-06-29 184804.png" alt="" class="w-full h-auto rounded-xl border border-indigo-200 shadow-sm" onerror="this.src='https://placehold.co/600x250/0f172a/ffffff?text=kiro/steering+folder+structure'"/>
+                                    </div>
+
+                                    <div class="bg-white/80 border border-indigo-200 rounded-xl p-4 max-w-xl space-y-2 font-sans font-normal">
+                                        <div class="flex items-start gap-2.5 text-xs text-slate-700 font-sans font-sans">
+                                            <span class="w-1.5 h-1.5 rounded-full bg-indigo-500 shrink-0 mt-1.5"></span>
+                                            <span>ודאו כי בתיקייה <code class="bg-slate-100 text-indigo-950 px-1 rounded font-mono text-[11px] font-bold">.kiro/steering</code> קיימת חוקת אבטחת מידע בשם <code class="bg-slate-100 text-indigo-950 px-1 rounded text-[11px] font-bold">baseline-security-constitution.md</code></span>
+                                        </div>
+                                        <div class="flex items-center gap-2.5 text-xs text-slate-700 font-sans font-sans font-sans">
+                                            <span class="w-1.5 h-1.5 rounded-full bg-indigo-500 shrink-0 font-sans"></span>
+                                            <span>ודאו כי קיימת חוקת העיצוב הממשלתי IGDS בשם <code class="bg-slate-100 text-indigo-950 px-1 rounded font-bold font-mono text-xs">frontend-constitution.md</code></span>
+                                        </div>
+                                    </div>
+
+                                    <!-- Help & Troubleshooting Box -->
+                                    <div class="bg-red-50 border-r-4 border-red-500 text-red-950 p-4 rounded-l-xl max-w-xl space-y-1.5 shadow-sm font-sans font-normal">
+                                        <div class="flex items-center gap-2 font-bold text-xs sm:text-sm text-red-900 font-sans">
+                                            <svg class="w-5 h-5 text-red-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+                                            <h4 class="font-bold">נתקלתם בבעיה? קבצים חסרים?</h4>
+                                        </div>
+                                        <p class="text-xs leading-relaxed text-red-800 font-bold font-sans">
+                                            במידה וקבצים אלו אינם מופיעים בתיקייה או שנוצרה שגיאה במהלך ייבוא ופתיחת הפרויקט, אנא פנו באופן מיידי לצוות הסיוע והתמיכה של המעבדה:
+                                        </p>
+                                        <div class="flex flex-wrap gap-2 pt-1 font-bold text-xs text-white font-sans">
+                                            <span class="bg-red-600 px-2.5 py-1 rounded-md shadow-xs">קרן</span>
+                                            <span class="bg-red-600 px-2.5 py-1 rounded-md shadow-xs font-sans">מיכאל</span>
+                                            <span class="bg-red-600 px-2.5 py-1 rounded-md shadow-xs">טל</span>
+                                            <span class="bg-red-600 px-2.5 py-1 rounded-md shadow-xs font-bold font-sans">ויקטור</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <!-- Checkable tasks for Step 3 -->
+                        <div class="mt-6 pt-4 border-t border-indigo-200/50">
+                            <h4 class="text-xs font-bold text-indigo-800 uppercase mb-3 tracking-wider font-sans font-sans">משימות לביצוע:</h4>
+                            <div class="space-y-2 font-normal font-sans">
+                                <label class="flex items-center gap-3 p-3 rounded-lg border border-indigo-200 bg-white/70 hover:bg-white transition cursor-pointer font-sans">
+                                    <input type="checkbox" class="task-checkbox rounded border-indigo-300 text-indigo-600 focus:ring-indigo-500 w-4 h-4 font-sans font-sans" onchange="updateProgress()" value="prep-1">
+                                    <span class="text-xs text-slate-700 font-bold">הורדתי את קבצי החוקות והפרויקט והעתקתי אותם לשולחן העבודה (Desktop) של המעבדה</span>
+                                </label>
+                                <label class="flex items-center gap-3 p-3 rounded-lg border border-indigo-200 bg-white/70 hover:bg-white transition cursor-pointer font-sans">
+                                    <input type="checkbox" class="task-checkbox rounded border-indigo-300 text-indigo-600 focus:ring-indigo-500 w-4 h-4 font-sans" onchange="updateProgress()" value="prep-2">
+                                    <span class="text-xs text-slate-700 font-bold font-sans">פתחתי פרויקט חדש ב-Kiro, בחרתי בתיקיית kiro-starting-project-main ולחצתי על Open</span>
+                                </label>
+                                <label class="flex items-center gap-3 p-3 rounded-lg border border-indigo-200 bg-white/70 hover:bg-white transition cursor-pointer">
+                                    <input type="checkbox" class="task-checkbox rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 w-4 h-4" onchange="updateProgress()" value="prep-3">
+                                    <span class="text-xs text-slate-700 font-bold font-sans font-sans">אישרתי את הימצאות הקבצים baseline-security-constitution.md ו-frontend-constitution.md תחת תיקיית .kiro/steering</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- STEP 4: Important Highlights (Pastel Rose Theme, Heading "דגש" colored RED) -->
+                <section id="step-highlights" class="step-section bg-rose-50/40 rounded-2xl border border-rose-200/80 shadow-sm p-6 sm:p-8 transition-all duration-300 font-sans">
+                    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between border-b border-rose-200/50 pb-4 mb-6">
+                        <div class="flex items-center gap-3 font-sans">
+                            <div class="w-10 h-10 rounded-xl bg-rose-200 text-rose-900 flex items-center justify-center font-bold text-lg">4</div>
+                            <div>
+                                <h2 class="text-xl font-bold text-rose-950 font-sans"><span class="text-red-600 font-bold">דגשים</span> חשובים לפני שמתחילים</h2>
+                                <p class="text-xs text-rose-700 font-bold">הגדרות קריטיות ב-Kiro ופתרון תקלות עבודה בזמן אמת</p>
+                            </div>
+                        </div>
+                        <div class="mt-3 sm:mt-0 font-sans">
+                            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-rose-200/60 text-rose-900 font-sans font-sans">
+                                <span class="w-2 h-2 rounded-full bg-amber-500"></span>
+                                חוקי עבודה ב-Kiro
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="space-y-6 text-sm text-slate-700 leading-relaxed font-normal">
+                        <p class="font-sans font-normal font-sans">
+                            לאחר שביצעתם את הגדרות הבסיס במעבדה, שימו לב לארבעה דגשים מרכזיים במהלך העבודה השוטפת שלכם מול סוכן ה-AI ב-Kiro:
+                        </p>
+
+                        <!-- Highlights Grid -->
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-5 font-normal text-slate-700 font-sans font-sans">
+                            
+                            <!-- Highlight 1: Follow Button -->
+                            <div class="bg-white/80 border border-rose-200 rounded-xl p-5 flex gap-4">
+                                <div class="bg-rose-100 text-rose-700 w-8 h-8 rounded-lg flex items-center justify-center shrink-0 font-bold text-sm">1</div>
+                                <div class="space-y-1">
+                                    <h3 class="font-bold text-slate-950 text-xs sm:text-sm font-sans">שימוש בכפתור ה-Follow</h3>
+                                    <p class="text-xs text-slate-600 leading-relaxed">
+                                        ודאו כי כפתור ה-<strong>Follow (עקוב)</strong> ב-Kiro מסומן ומופעל. כפתור זה גורם למסך העבודה להתמקד ולגלול אוטומטית בעקבות פעולות הסוכן בכל רגע נתון. הפעלתו תמנע מצב שבו הסוכן מבצע משימות ברקע ללא המחשה ויזואלית מיידית על המסך.
+                                    </p>
+                                </div>
+                            </div>
+
+                            <!-- Highlight 2: File Viewing from Chat -->
+                            <div class="bg-white/80 border border-rose-200 rounded-xl p-5 flex gap-4 font-sans font-sans">
+                                <div class="bg-rose-100 text-rose-700 w-8 h-8 rounded-lg flex items-center justify-center shrink-0 font-bold text-sm font-sans">2</div>
+                                <div class="space-y-1">
+                                    <h3 class="font-bold text-slate-900 text-xs sm:text-sm font-sans">פתיחה וצפייה מהירה בקבצים</h3>
+                                    <p class="text-xs text-slate-600 leading-relaxed font-normal">
+                                        במהלך העבודה, <strong>בחלון ה-Chat יופיע שם הקובץ</strong> שהסוכן מייצר באותו הרגע. לחיצה ישירה עליו תפתח מיידית את הקובץ לצפייה ועריכה בחלון העבודה ב-Kiro, ללא צורך לחפש אותו ידנית בסייר הקבצים.
+                                    </p>
+                                </div>
+                            </div>
+
+                            <!-- Highlight 3: Token Usage -->
+                            <div class="bg-white/80 border border-rose-200 rounded-xl p-5 flex gap-4 font-sans">
+                                <div class="bg-rose-100 text-rose-700 w-8 h-8 rounded-lg flex items-center justify-center shrink-0 font-bold text-sm">3</div>
+                                <div class="space-y-1 font-sans">
+                                    <h3 class="font-extrabold text-slate-900 text-xs sm:text-sm font-sans font-sans">צריכת משאבים ו-Tokens</h3>
+                                    <p class="text-xs text-slate-600 leading-relaxed font-normal">
+                                        רוצים לדעת כמה משאבים מנוצלים? <strong>כמות ה-Tokens המנוצלים</strong> לטובת הפקת ה-Spec והשלבים השונים מוצגת ישירות וניתן לראות אותה באופן שוטף בחלון ה-Chat של Kiro.
+                                    </p>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <!-- Stuck Agent Tips Full Width - "דגש" is RED -->
+                        <div class="bg-rose-100/50 border border-rose-200 rounded-xl p-5 flex gap-4 mt-5 font-sans">
+                            <div class="bg-rose-200 text-rose-800 w-8 h-8 rounded-lg flex items-center justify-center shrink-0 font-bold text-sm">!</div>
+                            <div class="space-y-2 flex-1 font-sans">
+                                <h3 class="text-rose-950 text-xs sm:text-sm font-bold flex items-center gap-1 font-sans">
+                                    <span>⚠️</span> <span class="text-red-600 font-bold font-sans">דגש</span> חשוב: מה עושים כשהסוכן נראה "תקוע"?
+                                </h3>
+                                <p class="text-xs text-slate-700 leading-relaxed font-sans">
+                                    במידה וזיהיתם שהסוכן נעצר, נראה תקוע, או שאינו מציג התקדמות והרצה בחלון העבודה, סביבת Kiro מבוססת על סוכן AI חכם שניתן לתקשר איתו ישירות בדיוק כמו שמדברים עם מפתח אנושי בצוות כדי להבין מה עוצר אותו.
+                                </p>
+                                <div class="bg-white/80 p-3 rounded-lg border border-rose-200 space-y-1.5 font-bold font-sans">
+                                    <p class="text-[11px] text-slate-800 font-sans font-sans">ניתן לכתוב לו שאלות בדומה לשאלות ששואלים מפתח בצוות, למשל:</p>
+                                    <ul class="list-disc list-inside text-xs font-semibold text-rose-700 space-y-1 pr-1 font-sans font-sans">
+                                        <li>"למה הפסקת לעבוד?"</li>
+                                        <li>"מה הסיבה שאתה לא מריץ כלום?"</li>
+                                        <li>"האם נתקלת בקושי או שגיאה בבניית הקבצים?"</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Checkable tasks for Step 4 -->
+                        <div class="pt-4 border-t border-rose-200/50 font-sans font-sans font-sans">
+                            <h4 class="text-xs font-bold text-rose-800 uppercase mb-3 tracking-wider font-sans font-sans">משימות לביצוע:</h4>
+                            <div class="space-y-2 font-normal font-sans">
+                                <label class="flex items-center gap-3 p-3 rounded-lg border border-rose-200 bg-white/70 hover:bg-white transition cursor-pointer font-sans font-sans">
+                                    <input type="checkbox" class="task-checkbox rounded border-rose-300 text-indigo-600 focus:ring-indigo-500 w-4 h-4 font-sans font-sans font-sans" onchange="updateProgress()" value="high-1">
+                                    <span class="text-xs text-slate-700 font-sans font-sans font-sans font-sans">קראתי והבנתי את כל דגשי העבודה והמעקב ב-Chat (כפתור ה-Follow, מעקב Tokens, פתיחת קבצים וניהול תקיעות)</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- STEP 5: Prototype Prompt (Pastel Violet/Indigo Theme) -->
+                <section id="step-prompt" class="step-section bg-violet-50/40 rounded-2xl border border-violet-200/80 shadow-sm p-6 sm:p-8 transition-all duration-300 font-sans">
+                    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between border-b border-violet-200/50 pb-4 mb-6">
+                        <div class="flex items-center gap-3 font-sans font-sans">
+                            <div class="w-10 h-10 rounded-xl bg-violet-200 text-violet-900 flex items-center justify-center font-bold text-lg font-sans">5</div>
+                            <div>
+                                <h2 class="text-xl font-bold text-violet-950 font-sans font-sans font-sans">שלב 5: פרומפט אב הטיפוס להעתקה</h2>
+                                <p class="text-xs text-violet-700 font-bold">העתקת פרומפט הדרישות המלא לטובת חילול ה-Requirements (Core-Web)</p>
+                            </div>
+                        </div>
+                        <div class="mt-3 sm:mt-0 font-sans">
+                            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-violet-200/60 text-violet-900 animate-pulse font-sans">
+                                <span class="w-2 h-2 rounded-full bg-violet-500"></span>
+                                הרצת דרישות
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="space-y-6 text-sm text-slate-700 leading-relaxed font-sans">
+                        <p class="font-normal font-sans">
+                            לפניכם הפרומפט המקצועי המעודכן עבור פיתוח אב הטיפוס ב-<strong>Core-Web</strong> (Vanilla HTML/CSS/JS). העתיקו אותו באמצעות לחיצה על כפתור ההעתקה המהירה והזינו אותו אל תוך חלון ה-Chat של ה-AI ב-Kiro:
+                        </p>
+
+                        <!-- Beautiful, Clear Prompt Copy Container -->
+                        <div class="border border-violet-200 rounded-2xl overflow-hidden bg-white shadow-md font-sans">
+                            <!-- Header -->
+                            <div class="bg-gradient-to-r from-violet-50/60 via-purple-50/30 to-violet-50/60 px-5 py-4 border-b border-violet-200 flex flex-col sm:flex-row justify-between sm:items-center gap-3">
+                                <div>
+                                    <span class="text-xs font-bold text-violet-950 tracking-wide uppercase flex items-center gap-1.5 font-sans font-sans">
+                                        <span class="w-2.5 h-2.5 rounded-full bg-violet-600 animate-pulse shrink-0 font-sans font-sans font-sans"></span>
+                                        📋 פרומפט אב הטיפוס לפתיחת התרגיל (Core-Web)
+                                    </span>
+                                    <p class="text-[11px] text-slate-500 mt-0.5 font-normal">לחצו על הקישור כדי להעתיק את הפרומפט המושלם ישירות ל-Kiro</p>
+                                </div>
+                                <button onclick="copyPrompt('prompt-text-req-dedicated', this)" class="flex items-center justify-center gap-2 px-4 py-2.5 bg-violet-600 hover:bg-violet-700 text-white text-xs font-bold rounded-xl shadow transition duration-150 shrink-0 select-none font-sans font-sans">
+                                    <span>העתקת פרומפט מלא</span>
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"></path></svg>
+                                </button>
+                            </div>
+
+                            <!-- Structured & Segmented Prompt Breakdown with font-normal (Not Bold) -->
+                            <div class="p-5 sm:p-6 space-y-4 bg-slate-50/50 font-normal text-slate-800 font-sans font-sans">
+                                
+                                <!-- Part 1: Product Goal -->
+                                <div class="bg-white p-4 rounded-xl border border-slate-200/80 shadow-xs space-y-1.5">
+                                    <div class="flex items-center justify-between font-bold">
+                                        <span class="text-[10px] font-bold text-violet-700 uppercase bg-violet-50 px-2.5 py-0.5 rounded-full">1. הגדרת המוצר והחזון</span>
+                                    </div>
+                                    <p class="text-xs sm:text-sm leading-relaxed pr-2 border-r-2 border-violet-400 font-normal">
+                                        "אני רוצה לפתח מוצר ממשלתי חדש בשם 'פורטל פניות הציבור האחוד', שנועד לאפשר לאזרחים להגיש פניות במקום אחד מבלי לדעת מראש איזה משרד מטפל בהן."
+                                    </p>
+                                </div>
+
+                                <!-- Part 2: Ministry Directory List -->
+                                <div class="bg-white p-4 rounded-xl border border-slate-200/80 shadow-xs space-y-2 font-sans font-normal">
+                                    <div class="flex items-center justify-between font-bold">
+                                        <span class="text-[10px] font-bold text-amber-700 uppercase bg-amber-50 px-2.5 py-0.5 rounded-full">2. רשימת משרדים מורשים (בסיס נתונים סגור)</span>
+                                    </div>
+                                    <p class="text-xs text-slate-500 font-normal font-sans">הגדרת תיקיות היעד לניתוב עבור 13 המשרדים הרשמיים:</p>
+                                    <div class="text-xs bg-amber-50/20 p-3 rounded-lg border border-amber-100/50 leading-relaxed font-normal">
+                                        "רשימת המשרדים : משרד הבריאות, משרד הפנים, נציבות שירות המדינה, משרד המשפטים, מערך הדיגיטל הלאומי, משרד הכלכלה, משרד האוצר, רשות המסים, משרד ראש הממשלה, משרד הבטחון, משרד העלייה והקליטה, רשות האכיפה והגביה, משרד התיירות."
+                                    </div>
+                                </div>
+
+                                <!-- Part 3: Frontend & Nimbus spec -->
+                                <div class="bg-white p-4 rounded-xl border border-slate-200/80 shadow-xs space-y-1.5 font-sans">
+                                    <div class="flex items-center justify-between font-bold font-sans">
+                                        <span class="text-[10px] font-bold text-emerald-700 uppercase bg-emerald-50 px-2.5 py-0.5 rounded-full font-sans font-sans">3. דרישות ממשק קצה ולוגו נימבוס</span>
+                                    </div>
+                                    <p class="text-xs sm:text-sm leading-relaxed font-normal">
+                                        "הטופס יכלול שדות קלט קשיחים: שם מלא, פרטי התקשרות (שם פרטי + שם משפחה + אימייל + טלפון) ותיבת טקסט חופשי לתיאור הפנייה. יש לייצר כותרת לעמוד ולשלב ב-Header את התמונה של נימבוס. התמונה של נימבוס מופיעה בספריית images/header בשם nimbus_logo.png."
+                                    </p>
+                                </div>
+
+                                <!-- Part 4: Tech Stack (Core Web / No Backend) -->
+                                <div class="bg-white p-4 rounded-xl border border-slate-200/80 shadow-xs space-y-1.5 font-sans font-sans">
+                                    <div class="flex items-center justify-between font-bold">
+                                        <span class="text-[10px] font-bold text-purple-700 uppercase bg-purple-50 px-2.5 py-0.5 rounded-full">4. ארכיטקטורה וניתוב (Core-Web)</span>
+                                    </div>
+                                    <p class="text-xs sm:text-sm leading-relaxed font-normal">
+                                        "המערכת תסווג את נושא הבקשה ותנתב אותה אוטומטית למשרד הממשלתי המתאים. המערכת תיבנה כ-single page application ב-core-web ללא Backend, ללא חיבור ל-database. המערכת תיבנה כאב טיפוס להמחשה בלבד, וכאשר האזרח שולח את הטופס הוא מקבל דף יחיד עם הודעת אישור."
+                                    </p>
+                                </div>
+
+                                <!-- Part 5: Run Environment and Local Python Server -->
+                                <div class="bg-white p-4 rounded-xl border border-slate-200/80 shadow-xs space-y-1.5 font-sans font-sans">
+                                    <div class="flex items-center justify-between font-bold">
+                                        <span class="text-[10px] font-bold text-teal-700 uppercase bg-teal-50 px-2.5 py-0.5 rounded-full">5. הקמת סביבת הרצה ושרת פייתון מקומי</span>
+                                    </div>
+                                    <p class="text-xs sm:text-sm leading-relaxed pr-2 border-r-2 border-teal-400 font-normal">
+                                        "בסיום הכנת הפרויקט יש להקים סביבה להרצה: יש להפעיל שרת מקומי מתיקיית הפרויקט (למשל python3 -m http.server 8000) ולגשת ל-http://localhost:8000 ולספק למשתמש את הקישור להפעלה בדפדפן"
+                                    </p>
+                                </div>
+
+                            </div>
+
+                            <!-- Invisible container preserving raw prompt with exact newlines and whitespace for correct clipboard API behavior -->
+                            <div class="sr-only" aria-hidden="true" id="prompt-text-req-dedicated">אני רוצה לפתח מוצר ממשלתי חדש בשם 'פורטל פניות הציבור האחוד', שנועד לאפשר לאזרחים להגיש פניות במקום אחד מבלי לדעת מראש איזה משרד מטפל בהן. 
+רשימת המשרדים : משרד הבריאות, משרד הפנים, נציבות שירות המדינה, משרד המשפטים, מערך הדיגיטל הלאומי, משרד הכלכלה, משרד האוצר, רשות המסים, משרד ראש הממשלה, משרד הבטחון, משרד העלייה והקליטה, רשות האכיפה והגביה, משרד התיירות. 
+הטופס יכלול שדות קלט קשיחים: שם מלא, פרטי התקשרות שם פשרטי + שם משפחה+ אימייל + טלפון ותיבת טקסט חופשי לתיאור הפנייה. המערכת תסווג את נושא הבקשה ותנתב אותה אוטומטית למשרד הממשלתי המתאים. 
+מערכת תיבנה כ- single page application ב core-web ללא Backend,ללא חיבור לdatabase. 
+המערכת תיבנה כאב טיפוס להמחשה בלבד כאשר האזרח שולח את הטופס הוא מקבל דף יחיד עם הודעת אישור.
+יש לייצר כותרת לעמוד לשלב ב header את התמונה של נימבוס. התמונה של נימבוס מופיע בספריית images/header בשם nimbus_logo.png
+
+בסיום הכנת הפרויקט יש להקים סביבה להרצה: יש להפעיל שרת מקומי מתיקיית הפרויקט (למשל python3 -m http.server 8000) ולגשת ל-http://localhost:8000 ולספק למשתמש את הקישור להפעלה בדפדפן</div>
+                        </div>
+
+                        <!-- Checkable tasks for Step 5 -->
+                        <div class="pt-4 border-t border-violet-200/50">
+                            <h4 class="text-xs font-bold text-violet-850 uppercase mb-3 tracking-wider font-sans">משימות לביצוע:</h4>
+                            <div class="space-y-2">
+                                <label class="flex items-center gap-3 p-3 rounded-lg border border-violet-200 bg-white/70 hover:bg-white transition cursor-pointer">
+                                    <input type="checkbox" class="task-checkbox rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 w-4 h-4 font-sans" onchange="updateProgress()" value="prompt-1">
+                                    <span class="text-xs text-slate-700 font-bold">העתקתי את פרומפט אב הטיפוס המלא, המנחה את הסוכן להקים את שרת הפייתון המקומי באופן אוטומטי</span>
+                                </label>
+                                <label class="flex items-center gap-3 p-3 rounded-lg border border-violet-200 bg-white/70 hover:bg-white transition cursor-pointer">
+                                    <input type="checkbox" class="task-checkbox rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 w-4 h-4 font-sans" onchange="updateProgress()" value="prompt-2">
+                                    <span class="text-xs text-slate-700 font-bold">הזנתי את הפרומפט החדש בחלון ה-Chat ב-Kiro והתחלתי את ג'נרוט מסמך הדרישות</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- STEP 6: Requirements (Pastel Blue Theme) -->
+                <section id="step-req" class="step-section bg-blue-50/40 rounded-2xl border border-blue-200/80 shadow-sm p-6 sm:p-8 transition-all duration-300">
+                    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between border-b border-blue-200/50 pb-4 mb-6">
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-xl bg-blue-200 text-blue-900 flex items-center justify-center font-bold text-lg">5</div>
+                            <div>
+                                <h2 class="text-xl font-bold text-blue-950 font-sans font-sans">שלב 6: הגדרת דרישות ראשונית (Requirements Phase)</h2>
+                                <p class="text-xs text-blue-700 font-bold">בדיקה ואישור של קובץ Requirements.md שנוצר ב-Kiro</p>
+                            </div>
+                        </div>
+                        <div class="mt-3 sm:mt-0 font-sans font-sans">
+                            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-blue-200/60 text-blue-900 font-sans">
+                                <span class="w-2 h-2 rounded-full bg-blue-500"></span>
+                                שלב אפיון ראשוני
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="space-y-6 text-sm text-slate-700 leading-relaxed font-sans font-sans">
+                        <p class="font-normal font-sans">
+                            לאחר שהסוכן סיים לעבד את הפרומפט, הוא יחולל את קובץ ה-<strong>Requirements.md</strong>. כעת נתפקד כגורם הבקרה האנושי (Human in the Loop) ונבצע בדיקת נאותות לתוצר.
+                        </p>
+
+                        <!-- Human in the Loop Box with explicit Requirement Examples -->
+                        <div class="bg-white/80 border border-blue-200 rounded-xl p-5 my-6 space-y-4 font-sans font-normal font-sans font-sans">
+                            <div>
+                                <h3 class="font-bold text-blue-950 text-sm flex items-center gap-1.5 font-sans font-sans">
+                                    <span>🔍</span> ביצוע בדיקת תוצר - Human in the Loop:
+                                </h3>
+                                <p class="text-xs text-slate-600 leading-relaxed mt-1 font-bold">
+                                    קראו את הדרישות שנוצרו ואשרו להתקדם לשלב הבא. בדקו את חלוקת הדרישות בקובץ. להלן דוגמאות מפורטות למבנה הדרישות והפורמט שעליכם לזהות:
+                                </p>
+                            </div>
+
+                            <div class="grid grid-cols-1 gap-4.5 font-bold text-slate-800">
+                                <!-- Requirement 1 Example Card -->
+                                <div class="bg-blue-50/30 p-4 rounded-xl border border-blue-200/60 shadow-xs hover:border-blue-300 transition-colors font-sans">
+                                    <div class="flex items-center justify-between mb-2">
+                                        <div class="flex items-center gap-2">
+                                            <span class="w-5 h-5 rounded-md bg-indigo-100 text-indigo-800 font-bold flex items-center justify-center text-xs">1</span>
+                                            <h4 class="text-xs font-bold text-slate-900">Requirement 1: Inquiry Form Display</h4>
+                                        </div>
+                                        <span class="text-[10px] bg-indigo-50 text-indigo-700 font-bold px-2 py-0.5 rounded">ממשק משתמש</span>
+                                    </div>
+                                    <p class="text-[11px] text-slate-500 mb-2 font-normal">הגדרת הצגת שדות הטופס וכותרת נימבוס במערכת.</p>
+                                    <div class="bg-slate-50 p-2.5 rounded border border-slate-100 font-mono text-[11px] text-indigo-950 text-left" dir="ltr">
+                                        <span class="font-bold text-indigo-700 font-sans">When</span> the system initializes, the web client <span class="font-bold text-indigo-700 font-sans font-sans">SHALL</span> display the inquiry form with input controls and render the Nimbus logo header image.
+                                    </div>
+                                </div>
+
+                                <!-- Requirement 4 Example Card -->
+                                <div class="bg-blue-50/30 p-4 rounded-xl border border-blue-200/60 shadow-xs hover:border-blue-300 transition-colors font-sans">
+                                    <div class="flex items-center justify-between mb-2">
+                                        <div class="flex items-center gap-2 font-sans font-sans">
+                                            <span class="w-5 h-5 rounded-md bg-indigo-100 text-indigo-800 font-bold flex items-center justify-center text-xs">4</span>
+                                            <h4 class="text-xs font-bold text-slate-900">Requirement 4: Submission Confirmation</h4>
+                                        </div>
+                                        <span class="text-[10px] bg-indigo-50 text-indigo-700 font-bold px-2 py-0.5 rounded">הודעת אישור</span>
+                                    </div>
+                                    <p class="text-[11px] text-slate-500 mb-2 font-normal font-sans">קבלת דף יחיד עם הודעת אישור ברורה לאחר הלחיצה על שליחה.</p>
+                                    <div class="bg-slate-50 p-2.5 rounded border border-slate-100 font-mono text-[11px] text-indigo-950 text-left" dir="ltr">
+                                        <span class="font-bold text-indigo-700 font-sans">When</span> the user submits the form, the application <span class="font-bold text-indigo-700 font-sans">SHALL</span> hide the form inputs and render a single confirmation message view.
+                                    </div>
+                                </div>
+
+                                <!-- Requirement 6 Example Card -->
+                                <div class="bg-blue-50/30 p-4 rounded-xl border border-blue-200/60 shadow-xs hover:border-blue-300 transition-colors font-sans font-sans">
+                                    <div class="flex items-center justify-between mb-2">
+                                        <div class="flex items-center gap-2">
+                                            <span class="w-5 h-5 rounded-md bg-indigo-100 text-indigo-800 font-bold flex items-center justify-center text-xs font-sans font-sans font-sans">6</span>
+                                            <h4 class="text-xs font-bold text-slate-900">Requirement 6: Accessibility Compliance</h4>
+                                        </div>
+                                        <span class="text-[10px] bg-indigo-50 text-indigo-700 font-bold px-2 py-0.5 rounded">נגישות מובנית</span>
+                                    </div>
+                                    <p class="text-[11px] text-slate-500 mb-2 font-normal">אכיפת חוקת הנגישות הממשלתית הדיגיטלית (WCAG 2.1 AA).</p>
+                                    <div class="bg-slate-50 p-2.5 rounded border border-slate-100 font-mono text-[11px] text-indigo-950 text-left" dir="ltr">
+                                        The application user interface <span class="font-bold text-indigo-700">SHALL</span> comply with WCAG 2.1 Level AA accessibility standards using correct ARIA properties on all form inputs.
+                                    </div>
+                                </div>
+                            </div>
+
+                            <p class="text-[11px] text-slate-600 mt-2 leading-relaxed">
+                                שימו לב לניסוחים בפורמט **EARS-formatted requirements** שסוכן ה-AI מבין היטב, המבוססים על שימוש במילות מפתח קבועות כמו "When X happens, the system SHALL do Y" או "The X SHALL...".
+                            </p>
+                        </div>
+
+                        <!-- Checkable tasks for Step 6 -->
+                        <div class="pt-4 border-t border-blue-200/50">
+                            <h4 class="text-xs font-bold text-blue-850 uppercase mb-3 tracking-wider font-sans font-sans font-sans">משימות לביצוע:</h4>
+                            <div class="space-y-2">
+                                <label class="flex items-center gap-3 p-3 rounded-lg border border-blue-200 bg-white/70 hover:bg-white transition cursor-pointer">
+                                    <input type="checkbox" class="task-checkbox rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 w-4 h-4 font-sans" onchange="updateProgress()" value="req-1">
+                                    <span class="text-xs text-slate-700 font-bold">המתנתי עד ש-Kiro חולל את קובץ Requirements.md המלא</span>
+                                </label>
+                                <label class="flex items-center gap-3 p-3 rounded-lg border border-blue-200 bg-white/70 hover:bg-white transition cursor-pointer">
+                                    <input type="checkbox" class="task-checkbox rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 w-4 h-4 font-sans font-sans font-sans font-sans">
+                                    <span class="text-xs text-slate-700 font-bold font-sans">ביצעתי בדיקה (Review) לתוצר, זיהיתי את שלושת ה-Requirements לדוגמה ואישרתי להתקדם</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- STEP 7: Design (Pastel Orange Theme, Heading "דגשים" colored RED) -->
+                <section id="step-design" class="step-section bg-orange-50/40 rounded-2xl border border-orange-200/80 shadow-sm p-6 sm:p-8 transition-all duration-300">
+                    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between border-b border-orange-200/50 pb-4 mb-6">
+                        <div class="flex items-center gap-3 font-sans font-sans font-sans font-sans">
+                            <div class="w-10 h-10 rounded-xl bg-orange-200 text-orange-900 flex items-center justify-center font-bold text-lg">6</div>
+                            <div>
+                                <h2 class="text-xl font-bold text-orange-950 font-sans font-sans">שלב 7: תכנון ארכיטקטוני (Design Phase)</h2>
+                                <p class="text-xs text-orange-700 font-bold font-sans">תרגום דרישות עסקיות למפרטים טכניים וכתיבת design.md</p>
+                            </div>
+                        </div>
+                        <div class="mt-3 sm:mt-0 font-sans font-sans">
+                            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-orange-200/60 text-orange-900 animate-pulse font-sans font-sans">
+                                <span class="w-2 h-2 rounded-full bg-orange-500 font-sans font-sans font-sans font-sans font-sans font-sans font-sans"></span>
+                                שלב עיצוב טכנולוגי
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="space-y-6 text-sm text-slate-700 leading-relaxed font-sans">
+                        <p class="font-normal text-slate-700">
+                            בשלב זה הדרישות העסקיות מתורגמות למפרט טכני מוגדר היטב ומיוצרים כיסויי בדיקות רלוונטיים. הפלט בסיום שלב זה יהיה קובץ <strong>design.md</strong> רשמי.
+                        </p>
+
+                        <!-- Cleaned and styled Architectural Guideline directly on the screen -->
+                        <div class="border-r-4 border-orange-400 bg-white/80 rounded-l-xl p-5 my-5 space-y-4 shadow-sm font-normal">
+                            <div class="flex items-center gap-2 text-orange-950 font-sans">
+                                <svg class="w-5 h-5 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+                                </svg>
+                                <h3 class="text-sm font-bold uppercase tracking-wide">הנחיה אדריכלית - תכנון מפרט ה-Design ב-Kiro</h3>
+                            </div>
+                            
+                            <p class="text-xs text-slate-700 font-bold">
+                                פתחו את קובץ ה design.md ובידקו קיום ההגדרות הבאות (לדוגמא)
+                            </p>
+                            
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs font-normal font-sans">
+                                <!-- Rule 1 -->
+                                <div class="bg-orange-50/30 p-4 rounded-lg border border-orange-200/60 shadow-sm space-y-1">
+                                    <div class="flex items-center gap-2 font-bold text-slate-900 mb-1">
+                                        <span class="text-orange-600 text-base">📊</span>
+                                        <span>החלטות טכנולוגיות</span>
+                                    </div>
+                                    <p class="text-slate-600 leading-relaxed text-[11px] font-normal font-sans font-sans font-sans">
+                                        ודאו שימוש בטבלה המגדירה: <br>
+                                        <strong>Framework:</strong> Core-Web / Vanilla JS <br>
+                                        <strong>UI Componentry:</strong> Custom IDGS <br>
+                                        <strong>Backend / Database:</strong> None (Prototype-only)
+                                    </p>
+                                </div>
+                                
+                                <!-- Rule 2 -->
+                                <div class="bg-orange-50/30 p-4 rounded-lg border border-orange-200/60 shadow-sm space-y-1 font-sans">
+                                    <div class="flex items-center gap-2 font-bold text-slate-900 mb-1 font-sans">
+                                        <span class="text-orange-600 text-base">🎨</span>
+                                        <span>תאימות לכללי IDGS</span>
+                                    </div>
+                                    <p class="text-slate-600 leading-relaxed text-[11px] font-normal">
+                                        ודאו הגדרת שימוש ברכיבי העיצוב הממשלתי (כגון שימוש מפורש בתגיות IDGS קשיחות כמו <code class="bg-slate-100 text-pink-600 px-1 rounded font-mono text-[10px]">&lt;igds-header&gt;</code>) ושילוב לוגו נימבוס.
+                                    </p>
+                                </div>
+                                
+                                <!-- Rule 3 -->
+                                <div class="bg-orange-50/30 p-4 rounded-lg border border-orange-200/60 shadow-sm space-y-1 font-sans font-sans">
+                                    <div class="flex items-center gap-2 font-bold text-slate-900 mb-1 font-sans font-sans">
+                                        <span class="text-orange-600 text-base font-sans">📋</span>
+                                        <span>אכיפת מודל הנתונים</span>
+                                    </div>
+                                    <p class="text-slate-600 leading-relaxed text-[11px] font-normal">
+                                        ודאו כי ב-Data Models מוגדרת רשימה קשיחה של 13 המשרדים שהוזנה בפרומפט הדרישות למניעת הזיית משרדים.
+                                    </p>
+                                </div>
+                            </div>
+
+                            <!-- Design Phase Highlights - Header "דגשים" colored RED -->
+                            <div class="mt-4 pt-4 border-t border-orange-200/50 space-y-2.5 font-sans">
+                                <h4 class="text-xs font-bold text-orange-950 uppercase tracking-wider flex items-center gap-1">
+                                    <span>🎯</span> <span class="text-red-600 font-bold font-sans font-sans">דגשים</span> קריטיים למעקב בקובץ ה-Design:
+                                </h4>
+                                <ul class="list-disc list-inside text-xs text-slate-700 space-y-1.5 pr-1 font-normal font-sans">
+                                    <li><strong>תהליכי מערכת:</strong> שימו לב ליצירת זרימת תהליכי המערכת המוגדרים תחת סעיף ה-<strong>application flow</strong>.</li>
+                                    <li><strong>מבנה הנתונים:</strong> ודאו שנוצר מבנה נתונים מפורט כפי שהוגדר בפרומפט המקורי (מכיל שדות כגון <code class="bg-white text-orange-900 px-1 rounded font-mono border text-[10px]">firstname</code>, <code class="bg-white text-orange-900 px-1 rounded font-mono border text-[10px]">email</code>, <code class="bg-white text-orange-900 px-1 rounded font-mono border text-[10px]">phone</code>...).</li>
+                                    <li><strong>עדכוני הסוכן:</strong> עקבו אחר השלבים והמשימות שהסוכן מגדיר, מבצע ומעדכן בזמן אמת על סיומם בתוך חלון ה-<strong>Chat</strong>.</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <!-- Checkable tasks for Step 7 -->
+                        <div class="pt-4 border-t border-orange-200/50">
+                            <h4 class="text-xs font-bold text-orange-850 uppercase mb-3 tracking-wider font-sans">משימות לביצוע:</h4>
+                            <div class="space-y-2">
+                                <label class="flex items-center gap-3 p-3 rounded-lg border border-orange-200 bg-white/70 hover:bg-white transition cursor-pointer">
+                                    <input type="checkbox" class="task-checkbox rounded border-orange-300 text-orange-600 focus:ring-indigo-500 w-4 h-4 font-sans font-sans" onchange="updateProgress()" value="design-1 font-sans">
+                                    <span class="text-xs text-slate-700 font-normal font-sans">הוריתי ל-Kiro ליצור את קובץ design.md ווידאתי שהוא כולל טבלת החלטות טכנולוגיות ושימוש ב-Core-Web</span>
+                                </label>
+                                <label class="flex items-center gap-3 p-3 rounded-lg border border-orange-200 bg-white/70 hover:bg-white transition cursor-pointer">
+                                    <input type="checkbox" class="task-checkbox rounded border-orange-300 text-orange-600 focus:ring-indigo-500 w-4 h-4 font-sans font-sans" onchange="updateProgress()" value="design-2 font-sans font-sans font-sans">
+                                    <span class="text-xs text-slate-700 font-normal">בדקתי את קובץ ה-Design ו-וידאתי את נכונות ה-application flow, מבנה שדות הנתונים, ועדכוני הסוכן בצ'אט</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- STEP 8: Implementation (Pastel Purple Theme) -->
+                <section id="step-impl" class="step-section bg-purple-50/40 rounded-2xl border border-purple-200/80 shadow-sm p-6 sm:p-8 transition-all duration-300">
+                    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between border-b border-purple-200/50 pb-4 mb-6">
+                        <div class="flex items-center gap-3 font-sans font-sans font-sans">
+                            <div class="w-10 h-10 rounded-xl bg-purple-200 text-purple-900 flex items-center justify-center font-bold text-lg font-sans">8</div>
+                            <div>
+                                <h2 class="text-xl font-bold text-purple-950 font-sans">שלב 8: יישום המערכת וג'נרוט קוד (Implementation Phase)</h2>
+                                <p class="text-xs text-purple-700 font-bold">יצירת tasks.md וג'נרוט הקוד המלא על ידי ה-AI</p>
+                            </div>
+                        </div>
+                        <div class="mt-3 sm:mt-0 font-sans">
+                            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-purple-200/60 text-purple-900 animate-pulse font-sans">
+                                <span class="w-2 h-2 rounded-full bg-purple-500 font-sans"></span>
+                                שלב יישום וקוד
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="space-y-6 text-sm text-slate-700 leading-relaxed font-sans font-sans font-sans">
+                        <p class="font-normal font-sans">
+                            זהו שלב ייצור קוד המערכת על ידי ה-AI וסידור משימות הפיתוח. קובץ ה-<strong>tasks.md</strong> ייווצר וישמש כצ'קליסט לפיתוח. ה-AI יבצע את ג'נרוט קוד ה-Frontend (קובצי HTML/JS/CSS מקומיים הכוללים את חוקת העיצוב).
+                        </p>
+
+                        <!-- Communication & tasks.md Guide -->
+                        <div class="bg-white/80 border border-purple-200 rounded-xl p-5 space-y-4 shadow-xs font-sans">
+                            <h3 class="text-xs font-bold text-purple-950 uppercase flex items-center gap-2 font-sans font-sans font-sans font-sans font-sans font-sans font-sans">
+                                <span>💬</span> עבודה אינטראקטיבית וניהול משימות מול הסוכן:
+                            </h3>
+                            <p class="text-xs text-slate-600 leading-relaxed font-normal">
+                                במהלך ייצור הקוד, יש לכם אפשרות מלאה לדבר ולשאול את הסוכן שאלות מכוונות, לקבל סטטוס ולהנחות אותו להמשך עבודה:
+                            </p>
+                            
+                            <!-- Interactive commands showcase -->
+                            <div class="bg-purple-50/30 p-4 rounded-lg border border-purple-200 space-y-3 font-normal">
+                                <div>
+                                    <p class="text-[11px] font-bold text-slate-800">1. שאילתת סטטוס בשפה חופשית:</p>
+                                    <p class="text-xs text-slate-600 mt-1 font-normal font-sans">
+                                        תוכלו להקליד ישירות בצ'אט את המשפט הבא:
+                                    </p>
+                                    <div class="bg-slate-950 text-emerald-400 p-2.5 rounded font-mono text-xs flex justify-between items-center text-left my-1.5" dir="ltr font-sans font-sans">
+                                        <span>show me what you are doing</span>
+                                        <button onclick="copyRawText('show me what you are doing', this)" class="bg-slate-800 hover:bg-slate-700 text-slate-300 font-sans px-2 py-0.5 rounded text-[10px] transition">Copy 📋</button>
+                                    </div>
+                                    <p class="text-xs text-slate-600 leading-relaxed font-normal font-sans">
+                                        בתגובה, הסוכן יציג בפניכם את <strong>כל השלבים שבוצעו עד כה</strong> ויבקש את אישורכם המפורש כדי להמשיך הלאה.
+                                    </p>
+                                </div>
+
+                                <div class="pt-2.5 border-t border-purple-200/50 font-normal font-sans font-sans">
+                                    <p class="text-[11px] font-bold text-slate-800 font-sans">2. מעקב התקדמות בתוך קובץ <code class="font-mono bg-white px-1 rounded border text-purple-900 text-xs">tasks.md</code>:</p>
+                                    <p class="text-xs text-slate-600 mt-1 leading-relaxed font-sans font-sans">
+                                        פתחו את קובץ המשימות שנוצר וצפו בהתקדמות המשימות שהוגדרו על ידי הסוכן. בקובץ תוכלו לזהות את שלבי ההתקדמות הבאים בזמן אמת:
+                                    </p>
+                                    <div class="flex flex-wrap gap-2 mt-2">
+                                        <span class="bg-amber-100 text-amber-800 text-[10px] font-bold px-2 py-0.5 rounded-full">task in progress</span>
+                                        <span class="bg-emerald-100 text-emerald-800 text-[10px] font-bold px-2 py-0.5 rounded-full font-sans">task completed</span>
+                                        <span class="bg-blue-100 text-blue-800 text-[10px] font-bold px-2 py-0.5 rounded-full font-sans">start task</span>
+                                        <span class="bg-slate-100 text-slate-800 text-[10px] font-bold px-2 py-0.5 rounded-full font-sans font-sans">task queued</span>
+                                    </div>
+                                    <p class="text-[11px] text-slate-700 font-bold mt-2.5">
+                                        💡 שימו לב: עבור כל משימה מוגדרת בקובץ ה-Tasks, תוכלו לראות את המיפוי והקישור הישיר שלה לשלב ה-Requirements המקביל!
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Code Review Checklists -->
+                        <div class="bg-white/80 border border-purple-200 rounded-xl p-5 space-y-4 font-sans">
+                            <h3 class="text-xs font-bold text-purple-950 uppercase flex items-center gap-2 font-sans font-sans font-sans font-sans">
+                                <span>🔍</span> ביצוע Code Review קצר בצוות
+                            </h3>
+                            <ul class="space-y-2.5 text-xs text-slate-700 font-normal font-sans">
+                                <li class="flex items-start gap-2">
+                                    <span class="text-purple-600 shrink-0 font-sans">✦</span>
+                                    <span><strong>ולידציות וקלט:</strong> חפשו את רכיבי ה-email או ה-phone number. האם אתם מזהים הוראות לסוכן לבצע בדיקות ולידציה על הקלטים הללו בדפדפן המקומי (JS Validation)?</span>
+                                </li>
+                                <li class="flex items-start gap-2 font-sans font-sans font-sans font-sans">
+                                    <span class="text-purple-600 shrink-0">✦</span>
+                                    <span><strong>שילוב לוגו נימבוס:</strong> ודאו שרכיב ה-Header של העמוד מפנה בצורה תקינה לקובץ התמונה <code class="bg-slate-100 text-pink-600 px-1 rounded font-mono text-xs">images/header/nimbus_logo.png</code>.</span>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <!-- Checkable tasks for Step 8 -->
+                        <div class="pt-4 border-t border-purple-200/50 font-sans">
+                            <h4 class="text-xs font-bold text-purple-850 uppercase mb-3 tracking-wider font-sans">משימות לביצוע:</h4>
+                            <div class="space-y-2 font-normal font-sans font-sans">
+                                <label class="flex items-center gap-3 p-3 rounded-lg border border-purple-200 bg-white/70 hover:bg-white transition cursor-pointer">
+                                    <input type="checkbox" class="task-checkbox rounded border-purple-300 text-indigo-600 focus:ring-indigo-500 w-4 h-4 font-sans font-sans" onchange="updateProgress()" value="impl-1">
+                                    <span class="text-xs text-slate-700 font-bold font-sans">קיבלתי קובץ tasks.md וקוד מערכת מוג'נרט ב-Core-Web מה-AI</span>
+                                </label>
+                                <label class="flex items-center gap-3 p-3 rounded-lg border border-purple-200 bg-white/70 hover:bg-white transition cursor-pointer font-sans">
+                                    <input type="checkbox" class="task-checkbox rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 w-4 h-4 font-sans font-sans" onchange="updateProgress()" value="impl-2">
+                                    <span class="text-xs text-slate-700 font-normal font-sans">פתחתי את tasks.md, עקבתי אחר התקדמות המשימות וביצעתי Code Review מלא לקבצים</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- STEP 9: Run Product (Pastel Emerald/Green Theme) -->
+                <section id="step-run" class="step-section bg-emerald-50/40 rounded-2xl border border-emerald-200/80 shadow-sm p-6 sm:p-8 transition-all duration-300 font-sans">
+                    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between border-b border-emerald-200/50 pb-4 mb-6">
+                        <div class="flex items-center gap-3 font-sans font-sans">
+                            <div class="w-10 h-10 rounded-xl bg-emerald-100 text-emerald-900 flex items-center justify-center font-bold text-lg font-sans font-sans">8</div>
+                            <div>
+                                <h2 class="text-xl font-bold text-emerald-950 font-sans">שלב 9: הרצת המוצר והצגתו (Run Phase)</h2>
+                                <p class="text-xs text-emerald-600 font-bold">צפייה באב הטיפוס בדפדפן המקומי ובדיקתו</p>
+                            </div>
+                        </div>
+                        <div class="mt-3 sm:mt-0 font-sans font-sans font-sans">
+                            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-emerald-200/60 text-emerald-900 animate-pulse font-sans">
+                                <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+                                הרצה בדפדפן
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="space-y-6 text-sm text-slate-700 leading-relaxed font-sans font-sans font-sans font-sans">
+                        <p class="font-normal font-sans">
+                            לאחר שהסוכן פעל לפי ההנחיות המוגדרות בפרומפט ואתחל עבורכם את שרת הפיתוח המקומי, כל שנותר לכם לעשות הוא לפתוח את הדפדפן ולגשת אל הכתובת הלוקאלית כדי להציג את האפליקציה פועלת באופן חי ואינטראקטיבי:
+                        </p>
+
+                        <!-- Active Local Link Box (http://localhost:8000/) -->
+                        <div class="bg-white/80 border border-emerald-200 rounded-xl p-5 my-4 space-y-3 font-normal">
+                            <h3 class="font-bold text-emerald-950 text-xs flex items-center gap-2">
+                                <span>🌐</span> קישור להפעלת אב הטיפוס בדפדפן:
+                            </h3>
+                            <p class="text-xs leading-relaxed text-slate-600 font-normal font-sans">
+                                לחצו על הכפתור מטה או פתחו לשונית חדשה בדפדפן, והקלידו את הכתובת הבאה:
+                            </p>
+                            <div class="pt-1.5 font-sans font-sans">
+                                <a href="http://localhost:8000/" target="_blank" class="inline-flex items-center gap-2 px-5 py-3 bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white font-bold rounded-xl shadow-md transition text-sm">
+                                    <span>מעבר לאתר המקומי: http://localhost:8000/ ↗</span>
+                                    <svg class="w-4 h-4 font-sans font-sans font-sans" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+                                </a>
+                            </div>
+                        </div>
+
+                        <!-- Checkable tasks for Step 9 -->
+                        <div class="pt-4 border-t border-emerald-200/50 font-sans font-sans font-sans">
+                            <h4 class="text-xs font-bold text-emerald-800 uppercase mb-3 tracking-wider font-sans font-sans">משימות לביצוע:</h4>
+                            <div class="space-y-2 font-normal font-sans font-sans font-sans">
+                                <label class="flex items-center gap-3 p-3 rounded-lg border border-emerald-200 bg-white/70 hover:bg-white transition cursor-pointer font-sans">
+                                    <input type="checkbox" class="task-checkbox rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 w-4 h-4 font-sans" onchange="updateProgress()" value="run-1 font-sans">
+                                    <span class="text-xs text-slate-700 font-sans font-sans font-sans font-sans font-sans">פתחתי את הקישור בדפדפן בכתובת המדויקת <code class="font-mono bg-slate-100 rounded text-pink-600 text-xs">http://localhost:8000/</code></span>
+                                </label>
+                                <label class="flex items-center gap-3 p-3 rounded-lg border border-emerald-200 bg-white/70 hover:bg-white transition cursor-pointer">
+                                    <input type="checkbox" class="task-checkbox rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 w-4 h-4 font-sans font-sans" onchange="updateProgress()" value="run-2 font-sans font-sans font-sans font-sans font-sans">
+                                    <span class="text-xs text-slate-700 font-normal font-sans">וידאתי כי עמוד פורטל הפניות נטען בהצלחה ומציג את לוגו נימבוס ב-Header</span>
+                                </label>
+                                <label class="flex items-center gap-3 p-3 rounded-lg border border-emerald-200 bg-white/70 hover:bg-white transition cursor-pointer">
+                                    <input type="checkbox" class="task-checkbox rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 w-4 h-4 font-sans font-sans font-sans" onchange="updateProgress()" value="run-3 font-sans font-sans">
+                                    <span class="text-xs text-slate-700 font-normal">ביצעתי פניית בדיקה תחת הכללים שהגדרנו ו-וידאתי קבלת דף יחיד עם הודעת אישור ממוקמת ומעוצבת היטב</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- STEP 10: Agent Querying (Pastel Teal Theme) -->
+                <section id="step-query" class="step-section bg-teal-50/40 rounded-2xl border border-teal-200/80 shadow-sm p-6 sm:p-8 transition-all duration-300 font-sans">
+                    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between border-b border-teal-200/50 pb-4 mb-6">
+                        <div class="flex items-center gap-3 font-sans font-sans font-sans">
+                            <div class="w-10 h-10 rounded-xl bg-teal-200 text-teal-900 flex items-center justify-center font-bold text-lg">10</div>
+                            <div>
+                                <h2 class="text-xl font-bold text-teal-950 font-sans">שלב 10: תשאול הסוכן (Agent Querying Phase)</h2>
+                                <p class="text-xs text-teal-600 font-bold">תחקור החלטות הסוכן, אבטחת מידע ואימות דרישות החוקה</p>
+                            </div>
+                        </div>
+                        <div class="mt-3 sm:mt-0 font-sans">
+                            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-teal-200/60 text-teal-900 animate-pulse font-sans">
+                                <span class="w-2 h-2 rounded-full bg-teal-500"></span>
+                                תחקור הסוכן
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="space-y-6 text-sm text-slate-700 leading-relaxed font-sans font-normal">
+                        <p class="text-slate-700 font-normal">
+                            לאחר הרצת הפרויקט וקבלת המוצר הסופי, תוכלו להמשיך <strong>ולתשאל את הסוכן</strong> על אופן היישום שבוצע, החלטות העיצוב, עקרונות אבטחת המידע שנשמרו, ורכיבי ה-IGDS שהוטמעו.
+                        </p>
+
+                        <div class="bg-white/80 border border-teal-200 rounded-xl p-5 space-y-4 font-sans font-normal font-sans font-sans font-sans">
+                            <h3 class="text-xs font-bold text-teal-950 uppercase flex items-center gap-2 font-sans font-sans font-sans">
+                                💬 שאלות לדוגמה שתוכלו להפנות לסוכן ב-Chat:
+                            </h3>
+                            <p class="text-xs text-slate-600 font-bold font-sans font-sans">
+                                העתיקו את אחת מהשאלות הבאות והריצו אותה ב-Kiro כדי לבחון את רמת העמידה של הסוכן בחוקות ה-Security וה-IGDS הממשלתיות:
+                            </p>
+
+                            <!-- Question 1 Card -->
+                            <div class="bg-teal-50/20 p-4 rounded-lg border border-teal-100 space-y-2 font-sans">
+                                <p class="text-xs font-bold text-slate-800">שאלה 1 (עברית): בחינת עקרונות אבטחת המידע שיושמו</p>
+                                <div class="bg-slate-950 text-emerald-400 p-2.5 rounded font-mono text-xs flex justify-between items-center text-left" dir="ltr">
+                                    <span dir="rtl">איזה עקרונות אבטחת מידע יושמו בפרויקט?</span>
+                                    <button onclick="copyRawText('איזה עקרונות אבטחת מידע יושמו בפרויקט?', this)" class="bg-slate-800 hover:bg-slate-700 text-slate-300 font-sans px-2.5 py-1 rounded text-[10px] transition font-sans">Copy 📋</button>
+                                </div>
+                            </div>
+
+                            <!-- Question 2 Card -->
+                            <div class="bg-teal-50/20 p-4 rounded-lg border border-teal-100 space-y-2 font-sans font-sans font-sans">
+                                <p class="text-xs font-bold text-slate-800 font-sans font-extrabold font-sans">שאלה 2 (אנגלית): מיפוי ואימות יישומי אבטחה מקובצי החוקה</p>
+                                <div class="bg-slate-950 text-emerald-400 p-2.5 rounded font-mono text-xs flex justify-between items-center text-left" dir="ltr font-sans">
+                                    <span>can you show me 2 security implementations from the steering files?</span>
+                                    <button onclick="copyRawText('can you show me 2 security implementations from the steering files?', this)" class="bg-slate-800 hover:bg-slate-700 text-slate-300 font-sans px-2.5 py-1 rounded text-[10px] transition font-sans">Copy 📋</button>
+                                </div>
+                            </div>
+
+                            <!-- Question 3 Card -->
+                            <div class="bg-teal-50/20 p-4 rounded-lg border border-teal-100 space-y-2 font-sans">
+                                <p class="text-xs font-bold text-slate-800">שאלה 3 (עברית): בדיקת הטמעת נגישות ורכיבי ה-IGDS הממשלתיים</p>
+                                <div class="bg-slate-950 text-emerald-400 p-2.5 rounded font-mono text-xs flex justify-between items-center text-left" dir="ltr">
+                                    <span dir="rtl font-sans font-sans">אילו רכיבי עיצוב ממשלתיים (IGDS) ופתרונות נגישות הטמעת בממשק הקוד?</span>
+                                    <button onclick="copyRawText('אילו רכיבי עיצוב ממשלתיים (IGDS) ופתרונות נגישות הטמעת בממשק הקוד?', this)" class="bg-slate-800 hover:bg-slate-700 text-slate-300 font-sans px-2.5 py-1 rounded text-[10px] transition font-sans">Copy 📋</button>
+                                </div>
+                            </div>
+
+                            <!-- Question 4 Card -->
+                            <div class="bg-teal-50/20 p-4 rounded-lg border border-teal-100 space-y-2 font-sans font-sans font-sans">
+                                <p class="text-xs font-bold text-slate-800 font-sans">שאלה 4 (אנגלית): הוכחת התאמה לחוקת העיצוב הדיגיטלי (Frontend Constitution)</p>
+                                <div class="bg-slate-950 text-emerald-400 p-2.5 rounded font-mono text-xs flex justify-between items-center text-left font-sans font-sans font-sans font-sans" dir="ltr">
+                                    <span>Which components and styles did you implement to satisfy the frontend-constitution.md rules?</span>
+                                    <button onclick="copyRawText('Which components and styles did you implement to satisfy the frontend-constitution.md rules?', this)" class="bg-slate-800 hover:bg-slate-700 text-slate-300 font-sans px-2.5 py-1 rounded text-[10px] transition font-sans">Copy 📋</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Checkable tasks for Step 10 -->
+                        <div class="pt-4 border-t border-teal-200/50 font-sans font-sans font-sans font-sans">
+                            <h4 class="text-xs font-bold text-teal-850 uppercase mb-3 tracking-wider font-sans">משימות לביצוע:</h4>
+                            <div class="space-y-2 font-normal font-sans font-sans font-sans">
+                                <label class="flex items-center gap-3 p-3 rounded-lg border border-teal-200 bg-white/70 hover:bg-white transition cursor-pointer">
+                                    <input type="checkbox" class="task-checkbox rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 w-4 h-4 font-sans font-sans" onchange="updateProgress()" value="query-1">
+                                    <span class="text-xs text-slate-700 font-bold font-sans">תשאלתי את הסוכן לגבי עקרונות אבטחת המידע ורכיבי ה-IGDS הממשלתיים שיושמו באב הטיפוס</span>
+                                </label>
+                                <label class="flex items-center gap-3 p-3 rounded-lg border border-teal-200 bg-white/70 hover:bg-white transition cursor-pointer font-sans">
+                                    <input type="checkbox" class="task-checkbox rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 w-4 h-4 font-sans font-sans font-sans" onchange="updateProgress()" value="query-2">
+                                    <span class="text-xs text-slate-700 font-bold font-normal">ביצעתי תשאול באנגלית לווידוא ההתאמה לחוקות ה-Security וה-Frontend (IGDS) שהורדנו</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Feedback Drawer Alert -->
+                <div class="bg-indigo-950 border border-indigo-800 rounded-2xl p-6 text-center space-y-3 text-white font-sans font-sans">
+                    <span class="text-2xl font-sans">🏆</span>
+                    <h3 class="text-base font-bold text-indigo-300 font-sans">מזל טוב! סיימתם את התרגיל המעשי בהצלחה!</h3>
+                    <p class="text-xs text-slate-300 max-w-lg mx-auto leading-relaxed font-sans font-normal font-sans font-sans">
+                        השלמתם את דרישות המערכת בהצלחה, תכננתם ובניתם אותה יחד עם ה-AI של Kiro והרצתם את שלבי הבדיקות והאימות הנדרשים! כעת תוכלו להמשיך להציג את תוצרי המערכת שלכם ליתר משתתפי הסדנה.
+                    </p>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Toast notification wrapper -->
+    <div id="toast" class="fixed bottom-4 right-4 bg-slate-900 text-white text-xs font-bold py-2.5 px-4 rounded-xl shadow-lg transition-transform duration-300 translate-y-20 flex items-center gap-2 font-sans font-sans">
+        <span>📋</span> <span id="toast-text">הועתק ללוח!</span>
+    </div>
+
+    <footer class="bg-slate-900 text-slate-400 py-8 border-t border-slate-800 text-center text-xs mt-12 font-sans font-sans">
+        <div class="max-w-7xl mx-auto px-4 font-mono font-sans">
+            <p>© 2026 פורטל ממשלה בקליק - סדנאות פיתוח מעשיות.</p>
+            <p class="mt-1 text-slate-600 font-sans font-sans font-sans">סביבת AWS Kiro מיועדת לשימוש לימודי ומעשי של המשתתפים בלבד.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Progress Tracker Logic
+        function updateProgress() {
+            const checkboxes = document.querySelectorAll('.task-checkbox');
+            const total = checkboxes.length;
+            let checkedCount = 0;
+            
+            checkboxes.forEach(cb => {
+                if(cb.checked) {
+                    checkedCount++;
+                }
+            });
+
+            const percent = Math.round((checkedCount / total) * 100);
+            document.getElementById('progress-text').innerText = percent + '%';
+            document.getElementById('progress-bar').style.width = percent + '%';
+        }
+
+        // Active Step Navigation update
+        function highlightStepInMenu(stepId) {
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('bg-indigo-50/50', 'border-indigo-200', 'text-indigo-900', 'font-bold', 'shadow-sm', 'bg-amber-50', 'border-amber-200', 'text-amber-900', 'bg-teal-50', 'border-teal-200', 'text-teal-900');
+                btn.classList.add('bg-white', 'border-slate-200', 'text-slate-600');
+                const badge = btn.querySelector('.rounded-full');
+                if (badge) {
+                    badge.classList.remove('bg-indigo-600', 'bg-amber-600', 'bg-teal-600', 'text-white');
+                    badge.classList.add('bg-slate-200', 'text-slate-700');
+                }
+            });
+
+            const activeBtn = document.getElementById('nav-' + stepId);
+            if (activeBtn) {
+                activeBtn.classList.remove('bg-white', 'border-slate-200', 'text-slate-600');
+                
+                // Define unique colors for step highlights in menu
+                if (stepId === 'step-conn') {
+                    activeBtn.classList.add('bg-amber-50', 'border-amber-200', 'text-amber-900', 'shadow-sm');
+                    const badge = activeBtn.querySelector('.rounded-full');
+                    if (badge) { badge.classList.remove('bg-slate-200', 'text-slate-700'); badge.classList.add('bg-amber-600', 'text-white'); }
+                } else if (stepId === 'step-sdd-base') {
+                    activeBtn.classList.add('bg-teal-50', 'border-teal-200', 'text-teal-900', 'shadow-sm');
+                    const badge = activeBtn.querySelector('.rounded-full');
+                    if (badge) { badge.classList.remove('bg-slate-200', 'text-slate-700'); badge.classList.add('bg-teal-600', 'text-white'); }
+                } else if (stepId === 'step-prep') {
+                    activeBtn.classList.add('bg-indigo-50/50', 'border-indigo-200', 'text-indigo-900', 'shadow-sm');
+                    const badge = activeBtn.querySelector('.rounded-full');
+                    if (badge) { badge.classList.remove('bg-slate-200', 'text-slate-700'); badge.classList.add('bg-indigo-600', 'text-white'); }
+                } else if (stepId === 'step-highlights') {
+                    activeBtn.classList.add('bg-rose-50/50', 'border-rose-200', 'text-rose-900', 'shadow-sm');
+                    const badge = activeBtn.querySelector('.rounded-full');
+                    if (badge) { badge.classList.remove('bg-slate-200', 'text-slate-700'); badge.classList.add('bg-rose-600', 'text-white'); }
+                } else if (stepId === 'step-prompt') {
+                    activeBtn.classList.add('bg-indigo-50/50', 'border-indigo-200', 'text-indigo-900', 'shadow-sm');
+                    const badge = activeBtn.querySelector('.rounded-full');
+                    if (badge) { badge.classList.remove('bg-slate-200', 'text-slate-700'); badge.classList.add('bg-indigo-600', 'text-white'); }
+                } else if (stepId === 'step-req') {
+                    activeBtn.classList.add('bg-blue-50/50', 'border-blue-200', 'text-blue-900', 'shadow-sm');
+                    const badge = activeBtn.querySelector('.rounded-full');
+                    if (badge) { badge.classList.remove('bg-slate-200', 'text-slate-700'); badge.classList.add('bg-blue-600', 'text-white'); }
+                } else if (stepId === 'step-design') {
+                    activeBtn.classList.add('bg-orange-50/50', 'border-orange-200', 'text-orange-900', 'shadow-sm');
+                    const badge = activeBtn.querySelector('.rounded-full');
+                    if (badge) { badge.classList.remove('bg-slate-200', 'text-slate-700'); badge.classList.add('bg-orange-600', 'text-white'); }
+                } else if (stepId === 'step-impl') {
+                    activeBtn.classList.add('bg-purple-50/50', 'border-purple-200', 'text-purple-900', 'shadow-sm');
+                    const badge = activeBtn.querySelector('.rounded-full');
+                    if (badge) { badge.classList.remove('bg-slate-200', 'text-slate-700'); badge.classList.add('bg-purple-600', 'text-white'); }
+                } else if (stepId === 'step-run') {
+                    activeBtn.classList.add('bg-emerald-50/50', 'border-emerald-200', 'text-emerald-900', 'shadow-sm');
+                    const badge = activeBtn.querySelector('.rounded-full');
+                    if (badge) { badge.classList.remove('bg-slate-200', 'text-slate-700'); badge.classList.add('bg-emerald-600', 'text-white'); }
+                } else if (stepId === 'step-query') {
+                    activeBtn.classList.add('bg-teal-50/50', 'border-teal-200', 'text-teal-900', 'shadow-sm');
+                    const badge = activeBtn.querySelector('.rounded-full');
+                    if (badge) { badge.classList.remove('bg-slate-200', 'text-slate-700'); badge.classList.add('bg-teal-600', 'text-white'); }
+                }
+            }
+        }
+
+        // Smooth Scroll to target step
+        // Smooth Scroll to target step
+        function scrollToStep(stepId) {
+            const element = document.getElementById(stepId);
+            if (element) {
+                element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+            highlightStepInMenu(stepId);
+        }
+
+        // Setup Intersection Observer to spy on scroll and update active state of sidebar step
+        document.addEventListener('DOMContentLoaded', () => {
+            const steps = document.querySelectorAll('.step-section');
+            const observerOptions = {
+                root: null,
+                rootMargin: '0px 0px -50% 0px', // Trigger when step is at the upper half
+                threshold: 0.15
+            };
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        highlightStepInMenu(entry.target.id);
+                    }
+                });
+            }, observerOptions);
+
+            steps.forEach(step => observer.observe(step));
+        });
+
+        // Copy Text Function using document.execCommand fallback
+        function copyPrompt(elementId, btn) {
+            const codeText = document.getElementById(elementId).innerText;
+            const textarea = document.createElement('textarea');
+            textarea.value = codeText;
+            document.body.appendChild(textarea);
+            textarea.select();
+            document.execCommand('copy');
+            document.body.removeChild(textarea);
+
+            showToast("הפרומפט הועתק ללוח בהצלחה!");
+        }
+
+        // Copy raw text for commands
+        function copyRawText(text, btn) {
+            const textarea = document.createElement('textarea');
+            textarea.value = text;
+            document.body.appendChild(textarea);
+            textarea.select();
+            document.execCommand('copy');
+            document.body.removeChild(textarea);
+
+            showToast("הנתונים הועתקו ללוח!");
+        }
+
+        function showToast(text) {
+            const toast = document.getElementById('toast');
+            const toastText = document.getElementById('toast-text');
+            if (toastText) {
+                toastText.innerText = text;
+            }
+            toast.classList.remove('translate-y-20');
+            setTimeout(() => {
+                toast.classList.add('translate-y-20');
+            }, 3000);
+        }
+
+        // Timer Logic (120:00 minutes countdown)
+        let totalSeconds = 120 * 60;
+        let timerInterval = null;
+
+        function toggleGlobalTimer() {
+            const playIcon = document.getElementById('play-icon');
+            const pauseIcon = document.getElementById('pause-icon');
+
+            if (timerInterval) {
+                // Pause
+                clearInterval(timerInterval);
+                timerInterval = null;
+                playIcon.classList.remove('hidden');
+                pauseIcon.classList.add('hidden');
+            } else {
+                // Play
+                timerInterval = setInterval(() => {
+                    if (totalSeconds <= 0) {
+                        clearInterval(timerInterval);
+                        timerInterval = null;
+                        document.getElementById('global-timer').innerText = "00:00";
+                        showToast("הזמן לסדנה הסתיים!");
+                        return;
+                    }
+                    totalSeconds--;
+                    const minutes = Math.floor(totalSeconds / 60);
+                    const seconds = totalSeconds % 60;
+                    document.getElementById('global-timer').innerText = 
+                        `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+                }, 1000);
+                playIcon.classList.add('hidden');
+                pauseIcon.classList.remove('hidden');
+            }
+        }
+
+        // Initialize progress bar
+        updateProgress();
+    </script>
+</body>
+</html>
+המערכת מציגה את spec_to_design_workshop.html.
